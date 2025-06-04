@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
-  getAuth,
+
   GoogleAuthProvider,
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-const auth = getAuth();
+import { auth } from "../../firebase/firebaseconfig";
+
 export const signInWithGoogle = createAsyncThunk(
   "auth/googleSignIn",
   async (_, { rejectWithValue }) => {
@@ -63,3 +64,4 @@ const authSlice = createSlice({
   },
 });
 export default authSlice.reducer;
+export const { setGuestMode } = authSlice.actions;
