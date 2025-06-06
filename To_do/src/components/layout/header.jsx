@@ -1,12 +1,16 @@
 import { useDispatch, useSelector } from "react-redux";
 
-import { signInWithGoogle } from "../../app/features/auth/authSlice";
+import {
+  googleLogout,
+  setGuestMode,
+  signInWithGoogle,
+} from "../../app/features/auth/authSlice";
 import { Link } from "react-router-dom";
 
 const Header = () => {
   const dispatch = useDispatch();
   const { user, isGuest } = useSelector((state) => state.auth);
-
+  console.log("User data", user);
   return (
     <header className="flex justify-between items-center p-4 bg-zinc-900 text-white shadow">
       {/* Logo */}
@@ -24,24 +28,33 @@ const Header = () => {
           <>
             <button
               onClick={() => dispatch(signInWithGoogle())}
-              className="bg-blue-500 px-3 py-1 rounded hover:bg-blue-600 text-sm"
+              className="bg-blue-500 text-sm py-2 rounded-full p-4"
             >
-              Sign in with Google
+              Sign in Google
             </button>
             <button
               onClick={() => dispatch(setGuestMode())}
-              className="bg-gray-500 px-3 py-1 rounded hover:bg-gray-600 text-sm"
+              className="bg-gray-500 px-3   hover:bg-gray-600  text-sm py-2 rounded-2xl p-4"
             >
               Continue as Guest
             </button>
           </>
         ) : (
           <>
+            {!isGuest && user?.photoURL && (
+              <img
+                src={user.photoURL?.replace("s96-c", "s400-c")}
+                alt="profile"
+                referrerPolicy="no-referrer"
+                className="w-8 h-8 rounded-full object-cover"
+                loading="lazy"
+              />
+            )}
             <span className="text-sm">
               {isGuest ? "Guest" : user.name || "User"}
             </span>
             <button
-              onClick={() => dispatch(logoutThunk())}
+              onClick={() => dispatch(googleLogout())}
               className="bg-red-500 px-3 py-1 rounded hover:bg-red-600 text-sm"
             >
               Logout

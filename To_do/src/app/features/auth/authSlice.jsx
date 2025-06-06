@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
-
   GoogleAuthProvider,
   signInWithPopup,
+  signInWithRedirect,
   signOut,
 } from "firebase/auth";
 import { auth } from "../../firebase/firebaseconfig";
@@ -17,6 +17,7 @@ export const signInWithGoogle = createAsyncThunk(
         uid: result.user.uid,
         email: result.user.email,
         name: result.user.displayName,
+        photoURL: result.user.photoURL,
       };
     } catch (error) {
       return rejectWithValue(error.message);
