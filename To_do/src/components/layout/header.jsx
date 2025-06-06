@@ -6,11 +6,14 @@ import {
   signInWithGoogle,
 } from "../../app/features/auth/authSlice";
 import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 
 const Header = () => {
   const dispatch = useDispatch();
   const { user, isGuest } = useSelector((state) => state.auth);
-  console.log("User data", user);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  useEffect()
   return (
     <header className="flex justify-between items-center p-4 bg-zinc-900 text-white shadow">
       {/* Logo */}
@@ -41,24 +44,53 @@ const Header = () => {
           </>
         ) : (
           <>
-            {!isGuest && user?.photoURL && (
-              <img
-                src={user.photoURL?.replace("s96-c", "s400-c")}
-                alt="profile"
-                referrerPolicy="no-referrer"
-                className="w-8 h-8 rounded-full object-cover"
-                loading="lazy"
-              />
+            {user && (
+              <div className="relative " ref={dropdownRef}>
+                <button
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  className="flex items-center gap-2 focus:outline-none"
+                >
+                  {!isGuest && user?.photoURL ? (
+                    <img
+                      src={user.photoURL.replace("s96-c", "s400-c")}
+                      alt="Profile"
+                      className="w-8 h-8 rounded-full object-cover"
+                      referrerPolicy="no-referrer"
+                    />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center">
+                      <span className="text-white text-xs">
+                        {user.name?.charAt(0) || "U"}
+                      </span>
+                    </div>
+                  )}
+                  <span className="text-sm">
+                    {isGuest ? "Guest" : user.name || "User"}
+                  </span>
+                </button>
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
+                    <div className="px-4 py-2 border-b">
+                      <p className="text-sm font-medium text-gray-900">
+                        {user.name || "User"}
+                      </p>
+                      <p className="text-xs text-gray-500 truncate">
+                        {user.email}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        dispatch(googleLogout());
+                        setIsDropdownOpen(false);
+                      }}
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      sign out
+                    </button>
+                  </div>
+                )}
+              </div>
             )}
-            <span className="text-sm">
-              {isGuest ? "Guest" : user.name || "User"}
-            </span>
-            <button
-              onClick={() => dispatch(googleLogout())}
-              className="bg-red-500 px-3 py-1 rounded hover:bg-red-600 text-sm"
-            >
-              Logout
-            </button>
           </>
         )}
       </div>
