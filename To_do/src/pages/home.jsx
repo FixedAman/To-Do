@@ -14,7 +14,7 @@ const Home = () => {
 
   return (
     <>
-      <h1 className="text-2xl font-bold mb-4">Add Task</h1>
+      <h1 className="text-2xl font-bold mt-64">Add Task</h1>
       <div className="container flex flex-col gap-4">
         <form onSubmit={handleSubmit} className="flex gap-2">
           <input
