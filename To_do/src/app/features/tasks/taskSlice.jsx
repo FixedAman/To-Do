@@ -1,4 +1,4 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   addDoc,
   collection,
@@ -42,7 +42,7 @@ export const fetchUserTasksFromFirebase = createAsyncThunk(
         ...doc.data(),
       }));
     } catch (error) {
-      rejectWithValue(error.message);
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -53,7 +53,7 @@ export const deleteTaskFromFirbase = createAsyncThunk(
       await deleteDoc(doc(db, "tasks", taskId));
       return taskId;
     } catch (error) {
-      rejectWithValue(error.message);
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -66,7 +66,66 @@ export const toggleTaskComplete = createAsyncThunk(
       });
       return { taskId, completed: !completed };
     } catch (error) {
-      rejectWithValue(error.message);
+      return rejectWithValue(error.message);
     }
   }
 );
+
+const taskSlice = createSlice({
+  name: "tasks",
+  initialState: {
+    tasks: [],
+    loading: false,
+    error: null,
+  },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(addTaskInFirebase.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(addTaskInFirebase.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(addTaskInFirebase.fulfilled, (state, action) => {
+        state.loading = false;
+        state.tasks.push(action.payload);
+      })
+      .addCase(fetchUserTasksFromFirebase.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchUserTasksFromFirebase.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(fetchUserTasksFromFirebase.fulfilled, (state, action) => {
+        state.loading = false;
+        state.tasks = action.payload;
+      })
+      .addCase(deleteTaskFromFirbase.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(deleteTaskFromFirbase.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(deleteTaskFromFirbase.fulfilled, (state, action) => {
+        state.loading = false;
+        state.tasks = state.tasks.filter((task) => task.id !== action.payload);
+      })
+      .addCase(toggleTaskComplete.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(toggleTaskComplete.rejected, (state, action) => {
+        state.error = action.payload;
+      })
+      .addCase(toggleTaskComplete.fulfilled, (state, action) => {
+        state.loading = false;
+        state.tasks = state.tasks.find(
+          (task) => task.id === action.payload.taskId
+        );
+        
+      });
+  },
+});
