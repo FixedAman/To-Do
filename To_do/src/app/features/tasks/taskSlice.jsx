@@ -122,10 +122,14 @@ const taskSlice = createSlice({
       })
       .addCase(toggleTaskComplete.fulfilled, (state, action) => {
         state.loading = false;
-        state.tasks = state.tasks.find(
+        const task = state.tasks.find(
           (task) => task.id === action.payload.taskId
         );
-        
+        if (task) {
+          task.completed = action.payload.completed;
+        }
       });
   },
 });
+
+export default taskSlice.reducer;
