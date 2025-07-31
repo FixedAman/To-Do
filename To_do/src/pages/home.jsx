@@ -8,16 +8,18 @@ import {
 } from "../app/features/tasks/taskSlice";
 const Home = () => {
   const [taskText, setTaskText] = useState("");
-  const [taskList, setTaskList] = useState([]);
   const [loading, setLoading] = useState(false);
   const { user, isGuest } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (user?.uid) {
-      dispatch(fetchUserTasksFromFirebase(user.uid));
+      dispatch(fetchUserTasksFromFirebase({ userId: user.uid }));
     }
   }, [user, dispatch]);
+  const { tasks: taskList } = useSelector((state) => state.tasks.text);
+
+  console.log(taskList);
   const handleSubmit = (e) => {
     e.preventDefault();
     if (taskText.trim() && user?.uid) {
@@ -61,10 +63,10 @@ const Home = () => {
             disabled={loading || !taskText.trim()}
             className="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50"
           >
-            {loading ? "Adding..." : "Add"}
+            {loading ? "Adding..." : "add"}
           </button>
         </form>
-        {loading && taskList.length === 0 ? (
+        {/* {loading && taskList.length === 0 ? (
           <p>Loading Task</p>
         ) : taskList.length === 0 ? (
           <p className="text-gray-500">No tasks yet. Add one above!</p>
@@ -86,7 +88,7 @@ const Home = () => {
               </li>
             ))}
           </ul>
-        )}
+        )} */}
       </div>
     </>
   );

@@ -32,6 +32,9 @@ export const fetchUserTasksFromFirebase = createAsyncThunk(
   "tasks/fetchTasks",
   async ({ userId }, { rejectWithValue }) => {
     try {
+      if (!userId) {
+        throw new Error("user id is missing");
+      }
       const taskQuery = query(
         collection(db, "tasks"),
         where("userId", "==", userId)
