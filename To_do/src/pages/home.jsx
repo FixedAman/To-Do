@@ -8,7 +8,7 @@ import {
 } from "../app/features/tasks/taskSlice";
 const Home = () => {
   const [taskText, setTaskText] = useState("");
-  const [loading, setLoading] = useState(false);
+
   const { user, isGuest } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
@@ -17,9 +17,8 @@ const Home = () => {
       dispatch(fetchUserTasksFromFirebase({ userId: user.uid }));
     }
   }, [user, dispatch]);
-  const { tasks: taskList } = useSelector((state) => state.tasks.text);
+  const { tasks, loading, error } = useSelector((state) => state.listOfTask);
 
-  console.log(taskList);
   const handleSubmit = (e) => {
     e.preventDefault();
     if (taskText.trim() && user?.uid) {
@@ -45,14 +44,14 @@ const Home = () => {
   };
   return (
     <>
-      <div className="max-w-md mx-auto mt-16 p-4">
-        <h1 className="text-2xl font-bold mb-4">
+      <div className="max-w-md mx-auto mt-16 p-4  ">
+        <h1 className="text-2xl font-bold mb-4 dark:text-white">
           {isGuest ? "Guest Mode" : "My Tasks"}
         </h1>
         <form className="mb-6 gap-2 flex" onSubmit={handleSubmit}>
           <input
             type="text"
-            className="border px-3 py-2 rounded flex-grow"
+            className="border   px-3 py-2 rounded flex-grow dark:text-white"
             value={taskText}
             placeholder="enter your task"
             onChange={(e) => setTaskText(e.target.value)}
@@ -61,23 +60,23 @@ const Home = () => {
           <button
             type="submit"
             disabled={loading || !taskText.trim()}
-            className="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50"
+            className="bg-blue-500 text-white  px-4 py-2 rounded disabled:opacity-50"
           >
             {loading ? "Adding..." : "add"}
           </button>
         </form>
-        {/* {loading && taskList.length === 0 ? (
+        {loading && tasks.length === 0 ? (
           <p>Loading Task</p>
-        ) : taskList.length === 0 ? (
+        ) : tasks.length === 0 ? (
           <p className="text-gray-500">No tasks yet. Add one above!</p>
         ) : (
           <ul className="space-y-2">
-            {taskList.map((task) => (
+            {tasks.map((task) => (
               <li
                 key={task.id}
-                className="flex items-center justify-between bg-white p-3 rounded shadow"
+                className="flex items-center justify-between dark:bg-slate-700 p-3 rounded shadow"
               >
-                <span>{task.text}</span>
+                <span className="dark:text-slate-200">{task.text}</span>
                 <button
                   className="text-red-500 hover:text-red-700"
                   disabled={loading}
@@ -88,7 +87,7 @@ const Home = () => {
               </li>
             ))}
           </ul>
-        )} */}
+        )}
       </div>
     </>
   );

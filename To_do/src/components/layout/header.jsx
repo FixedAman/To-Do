@@ -1,14 +1,19 @@
-import { useState, useRef, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { googleLogout, setGuestMode, signInWithGoogle } from "../../app/features/auth/authSlice";
+import { useState, useRef, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import {
+  googleLogout,
+  setGuestMode,
+  signInWithGoogle,
+} from "../../app/features/auth/authSlice";
+import { MdDarkMode } from "react-icons/md";
 
 const Header = () => {
   const dispatch = useDispatch();
   const { user, isGuest } = useSelector((state) => state.auth);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
-
+  const [isDark, setDark] = useState(false);
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -17,8 +22,8 @@ const Header = () => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
@@ -35,7 +40,9 @@ const Header = () => {
             <Link to="/about-us" className="hover:underline text-sm">
               About
             </Link>
-
+            <button>
+              <MdDarkMode />
+            </button>
             {!user ? (
               <>
                 <button
@@ -67,7 +74,7 @@ const Header = () => {
                   ) : (
                     <div className="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center">
                       <span className="text-white text-xs">
-                        {user?.name?.charAt(0) || 'U'}
+                        {user?.name?.charAt(0) || "U"}
                       </span>
                     </div>
                   )}
