@@ -13,7 +13,14 @@ const Header = () => {
   const { user, isGuest } = useSelector((state) => state.auth);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
-  const [isDark, setDark] = useState(false);
+  const [isDark, setDark] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saveMode = localStorage.getItem("darkMode");
+      if (saveMode !== null) return saveMode === true;
+      return window.matchMedia("(prefers-color-scheme: dark)").matches;
+    }
+    return false;
+  });
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -25,7 +32,12 @@ const Header = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
+  const handleToggle = () => {
+    const newMode = !isDark;
+    setDark(newMode);
+    localStorage.setItem("darkMode", newMode);
+    console.log(isDark);
+  };
   return (
     <header className="w-full bg-zinc-900 text-white shadow fixed top-0 left-0 right-0 z-50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -40,7 +52,7 @@ const Header = () => {
             <Link to="/about-us" className="hover:underline text-sm">
               About
             </Link>
-            <button>
+            <button onClick={handleToggle}>
               <MdDarkMode />
             </button>
             {!user ? (
