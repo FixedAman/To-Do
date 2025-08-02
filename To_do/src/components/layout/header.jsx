@@ -7,7 +7,7 @@ import {
   signInWithGoogle,
 } from "../../app/features/auth/authSlice";
 import { MdDarkMode } from "react-icons/md";
-
+import { MdOutlineLightMode } from "react-icons/md";
 const Header = () => {
   const dispatch = useDispatch();
   const { user, isGuest } = useSelector((state) => state.auth);
@@ -36,8 +36,21 @@ const Header = () => {
     const newMode = !isDark;
     setDark(newMode);
     localStorage.setItem("darkMode", newMode);
+    if (newMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+
     console.log(isDark);
   };
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, []);
   return (
     <header className="w-full bg-zinc-900 text-white shadow fixed top-0 left-0 right-0 z-50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -52,9 +65,7 @@ const Header = () => {
             <Link to="/about-us" className="hover:underline text-sm">
               About
             </Link>
-            <button onClick={handleToggle}>
-              <MdDarkMode />
-            </button>
+
             {!user ? (
               <>
                 <button
@@ -120,6 +131,12 @@ const Header = () => {
                 )}
               </div>
             )}
+            <button
+              onClick={handleToggle}
+              className=" rounded-full focus:outline-none p-2 focus:ring-white focus:ring hover:" 
+            >
+              {isDark ? <MdDarkMode /> : <MdOutlineLightMode />}
+            </button>
           </div>
         </div>
       </div>
