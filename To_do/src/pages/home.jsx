@@ -37,7 +37,7 @@ const Home = () => {
   const handleDelete = (taskId) => {
     dispatch(deleteTaskFromFirbase(taskId));
   };
-  const handleToggleComplete = (taskId, completed) => {
+  const handleToggleComplete = ({ taskId, completed }) => {
     dispatch(
       toggleTaskComplete({
         taskId,
@@ -93,14 +93,28 @@ const Home = () => {
                     <MdDelete />
                   </button>
                   <button
-                    className=" p-2 ml-2
+                    className={`p-2 ml-2
     text-gray-400 hover:text-green-500 
     dark:text-gray-500 dark:hover:text-green-400
     transition-colors duration-200
-    rounded-full hover:bg-green-100 dark:hover:bg-green-900/50 "
+    rounded-full hover:bg-green-100 dark:hover:bg-green-900/50 
+     
+     `}
                     disabled={loading}
+                    onClick={() =>
+                      handleToggleComplete({
+                        taskId: task.id,
+                        completed: task.completed,
+                      })
+                    }
                   >
-                    <FaCircleCheck />
+                    <FaCircleCheck
+                      className={`${
+                        task.completed
+                          ? "text-green-500 drop-shadow-[0_0_8px_rgba(34,197,94,0.7)]"
+                          : "text-gray-400"
+                      }`}
+                    />
                   </button>
                 </div>
               </li>

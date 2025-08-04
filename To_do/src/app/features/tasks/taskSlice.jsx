@@ -16,6 +16,9 @@ export const addTaskInFirebase = createAsyncThunk(
   "tasks/addTask",
   async ({ taskText, userId }, { rejectWithValue }) => {
     try {
+      // duplicate files will not be add 
+       
+
       const taskRef = await addDoc(collection(db, "tasks"), {
         text: taskText,
         userId,
@@ -62,7 +65,7 @@ export const deleteTaskFromFirbase = createAsyncThunk(
 );
 export const toggleTaskComplete = createAsyncThunk(
   "tasks/completeTask",
-  async (taskId, completed, { rejectWithValue }) => {
+  async ({ taskId, completed }, { rejectWithValue }) => {
     try {
       await updateDoc(doc(db, "tasks", taskId), {
         completed: !completed,
