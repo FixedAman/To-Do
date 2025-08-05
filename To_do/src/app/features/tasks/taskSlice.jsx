@@ -16,8 +16,16 @@ export const addTaskInFirebase = createAsyncThunk(
   "tasks/addTask",
   async ({ taskText, userId }, { rejectWithValue }) => {
     try {
-      // duplicate files will not be add 
-       
+      // duplicate files will not be add
+      const q = query(
+        collection(db, "tasks"),
+        where("userId", "==", userId),
+        where("text", "==", taskText.trim() && taskText)
+      );
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+        return rejectWithValue("task already exist");
+      }
 
       const taskRef = await addDoc(collection(db, "tasks"), {
         text: taskText,

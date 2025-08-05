@@ -22,16 +22,21 @@ const Home = () => {
   }, [user, dispatch]);
   const { tasks, loading, error } = useSelector((state) => state.listOfTask);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (taskText.trim() && user?.uid) {
-      dispatch(
-        addTaskInFirebase({
-          taskText: taskText.trim(),
-          userId: user.uid,
-        })
-      );
-      setTaskText("");
+      try {
+        await dispatch(
+          addTaskInFirebase({
+            taskText: taskText.trim(),
+            userId: user.uid,
+          })
+        ).unwrap();
+        setTaskText("");
+      } catch (err) {
+        console.log("this is error ", error);
+        alert(error);
+      }
     }
   };
   const handleDelete = (taskId) => {
