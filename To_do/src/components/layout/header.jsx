@@ -112,6 +112,12 @@ const Header = () => {
                       <p className="text-sm font-medium text-gray-900 truncate">
                         {isGuest ? "Guest User" : user.name || "User"}
                       </p>
+                      <button
+                        className="text-gray-900 text-sm font-medium"
+                        onClick={() => dispatch(signInWithGoogle())}
+                      >
+                        Login
+                      </button>
                       {!isGuest && (
                         <p className="text-xs text-gray-500 truncate">
                           {user.email}
@@ -133,7 +139,7 @@ const Header = () => {
             )}
             <button
               onClick={handleToggle}
-              className=" rounded-full focus:outline-none p-2 focus:ring-white focus:ring hover:" 
+              className=" rounded-full focus:outline-none p-2 focus:ring-white focus:ring hover:"
             >
               {isDark ? <MdDarkMode /> : <MdOutlineLightMode />}
             </button>

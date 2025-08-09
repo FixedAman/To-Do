@@ -5,7 +5,15 @@ import {
   signInWithRedirect,
   signOut,
 } from "firebase/auth";
-import { auth } from "../../firebase/firebaseconfig";
+import { auth, db } from "../../firebase/firebaseconfig";
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 
 export const signInWithGoogle = createAsyncThunk(
   "auth/googleSignIn",
@@ -13,12 +21,27 @@ export const signInWithGoogle = createAsyncThunk(
     try {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
-      return {
+      const singedInUser = {
         uid: result.user.uid,
         email: result.user.email,
         name: result.user.displayName,
         photoURL: result.user.photoURL,
       };
+
+      // guest snapShot
+      const queryGuestSnapshot = query(
+        collection(db, "tasks"),
+        where("userId", "==", "local/guestUser")
+      );
+      const guestData = await getDocs(queryGuestSnapshot);
+      //transfer guest data to google signed in
+      const updatePromises = guestData.docs.map((taskDoc) =>
+        updateDoc(doc(db, "tasks", taskDoc.id), {
+          userId: singedInUser.uid,
+        })
+      );
+      await Promise.all(updatePromises);
+      return singedInUser;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -58,6 +81,7 @@ const authSlice = createSlice({
       .addCase(signInWithGoogle.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload;
+        state.isGuest = false;
       })
       .addCase(googleLogout.fulfilled, (state) => {
         state.user = null;
