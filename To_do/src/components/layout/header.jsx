@@ -112,12 +112,16 @@ const Header = () => {
                       <p className="text-sm font-medium text-gray-900 truncate">
                         {isGuest ? "Guest User" : user.name || "User"}
                       </p>
-                      <button
-                        className="text-gray-900 text-sm font-medium"
-                        onClick={() => dispatch(signInWithGoogle())}
-                      >
-                        Login
-                      </button>
+                      {isGuest ? (
+                        <button
+                          className="text-gray-900 text-sm font-medium"
+                          onClick={() => dispatch(signInWithGoogle())}
+                        >
+                          Login
+                        </button>
+                      ) : (
+                        ""
+                      )}
                       {!isGuest && (
                         <p className="text-xs text-gray-500 truncate">
                           {user.email}
