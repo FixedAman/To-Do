@@ -9,9 +9,10 @@ import {
 } from "../app/features/tasks/taskSlice";
 import { MdDelete } from "react-icons/md";
 import Loader from "../components/ui/Loader";
+import TaskSearchFilter from "../components/layout/SearchMethod";
 const Home = () => {
   const [taskText, setTaskText] = useState("");
-
+  const [filteredTasks, setFilteredTask] = useState([]);
   const { user, isGuest } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
@@ -21,7 +22,9 @@ const Home = () => {
     }
   }, [user, dispatch]);
   const { tasks, loading, error } = useSelector((state) => state.listOfTask);
-
+  useEffect(() => {
+    setFilteredTask(tasks);
+  }, [tasks]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (taskText.trim() && user?.uid) {
@@ -52,10 +55,17 @@ const Home = () => {
   };
   return (
     <>
-      <div className="max-w-md mx-auto mt-16 p-4  ">
+      <div className="max-w-md mx-auto mt-16 p-4   ">
         <h1 className="text-2xl font-bold mb-4 dark:text-white">
           {isGuest ? "Guest Mode" : "My Tasks"}
         </h1>
+        <div className="search-bar justify-end flex mb-12">
+          <TaskSearchFilter
+            tasks={tasks}
+            onFilter={(filter) => setFilteredTask(filter)}
+          
+          />
+        </div>
         <form className="mb-6 gap-2 flex" onSubmit={handleSubmit}>
           <input
             type="text"
@@ -80,7 +90,7 @@ const Home = () => {
           <p className="text-gray-500">No tasks yet. Add one above!</p>
         ) : (
           <ul className="space-y-2">
-            {tasks.map((task) => (
+            {filteredTasks.map((task) => (
               <li
                 key={task.id}
                 className="flex items-center justify-between dark:bg-slate-700 p-3 rounded shadow"
