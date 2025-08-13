@@ -55,17 +55,19 @@ const Home = () => {
   };
   return (
     <>
-      <div className="max-w-md mx-auto mt-16 p-4   ">
-        <h1 className="text-2xl font-bold mb-4 dark:text-white">
-          {isGuest ? "Guest Mode" : "My Tasks"}
-        </h1>
-        <div className="search-bar justify-end flex mb-12">
-          <TaskSearchFilter
-            tasks={tasks}
-            onFilter={(filter) => setFilteredTask(filter)}
-          
-          />
+      <div className="max-w-md mx-auto mt-16 p-4    ">
+        <div className="search-and-title flex items-center  mb-8 flex-col">
+          <h1 className="text-2xl font-bold mb-4 dark:text-white">
+            {isGuest ? "Guest Mode" : "My Tasks"}
+          </h1>
+          <div className="search-bar   mb-12">
+            <TaskSearchFilter
+              tasks={tasks}
+              onFilter={(filter) => setFilteredTask(filter)}
+            />
+          </div>
         </div>
+
         <form className="mb-6 gap-2 flex" onSubmit={handleSubmit}>
           <input
             type="text"

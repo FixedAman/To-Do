@@ -91,7 +91,12 @@ export const toggleTaskComplete = createAsyncThunk(
     }
   }
 );
-
+export const updateTasks = createAsyncThunk(
+  "tasks/updateTask",
+  async ({ taskId }, { rejectWithValue }) => {
+    const q = query('')
+  }
+);
 const taskSlice = createSlice({
   name: "tasks",
   initialState: {

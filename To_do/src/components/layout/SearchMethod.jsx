@@ -28,7 +28,7 @@ const TaskSearchFilter = ({ tasks, onFilter }) => {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         placeholder="Search your tasks"
-        className="border p-2 flex-1 rounded dark:text-white  focus:outline-none bg-transparent "
+        className="border p-2 flex-1 rounded dark:text-white  focus:outline-none bg-transparent shadow"
       />
       <FcSearch className="text-xl mr-2 broder cursor-pointer" />
       <select
