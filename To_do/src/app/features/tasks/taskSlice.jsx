@@ -93,8 +93,29 @@ export const toggleTaskComplete = createAsyncThunk(
 );
 export const updateTasks = createAsyncThunk(
   "tasks/updateTask",
-  async ({ taskId }, { rejectWithValue }) => {
-    const q = query('')
+  async ({ taskId, newUpdateText, userId }, { rejectWithValue }) => {
+    try {
+      const normalizedText = newUpdateText.toLowerCase().replace(/\s+/g, "");
+      const q = query(collection(db, "tasks"), where("userId", "==", userId));
+      const fetchingTask = await getDocs(q);
+      // duplication check
+      const isDuplicate = fetchingTask.docs.some((doc) => {
+        const existingNormalized = doc
+          .data()
+          .text.toLowerCase()
+          .replace(/\s+/g, "");
+        return existingNormalized === normalizedText;
+      });
+      if (!isDuplicate) {
+        return rejectWithValue("Task already exist");
+      }
+      await updateDoc(doc(db, "tasks", taskId), {
+        text: newUpdateText,
+      });
+      return { taskId, newUpdateText };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
 const taskSlice = createSlice({

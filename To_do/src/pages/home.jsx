@@ -10,6 +10,7 @@ import {
 import { MdDelete } from "react-icons/md";
 import Loader from "../components/ui/Loader";
 import TaskSearchFilter from "../components/layout/SearchMethod";
+import { FcEditImage } from "react-icons/fc";
 const Home = () => {
   const [taskText, setTaskText] = useState("");
   const [filteredTasks, setFilteredTask] = useState([]);
@@ -108,6 +109,9 @@ const Home = () => {
                     onClick={() => handleDelete(task.id)}
                   >
                     <MdDelete />
+                  </button>
+                  <button disabled={loading}>
+                    <FcEditImage />
                   </button>
                   <button
                     className={`p-2 ml-2
