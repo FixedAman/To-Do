@@ -6,6 +6,7 @@ import {
   deleteTaskFromFirbase,
   fetchUserTasksFromFirebase,
   toggleTaskComplete,
+  updateTasks,
 } from "../app/features/tasks/taskSlice";
 import { MdDelete } from "react-icons/md";
 import Loader from "../components/ui/Loader";
@@ -53,6 +54,15 @@ const Home = () => {
         completed,
       })
     );
+  };
+  const handleUpdateText = ({ taskId }, currentText, e) => {
+    setTaskText(e.target.value);
+    const newText = taskText;
+    if (newText && newText.trim() && newText !== currentText) {
+      dispatch(
+        updateTasks({ taskId, newUpdateText: newText, userId: user.uid })
+      );
+    }
   };
   return (
     <>
@@ -110,7 +120,19 @@ const Home = () => {
                   >
                     <MdDelete />
                   </button>
-                  <button disabled={loading}>
+                  <button
+                    disabled={loading}
+                    // onClick={() =>
+                    //   handleUpdateText({ taskId: task.id }, task.text)
+                    // }
+                    onDoubleClick={(e) => {
+                      setTaskText(task.text);
+                      handleUpdateText({
+                        taskId: task.id,
+                        currentText: task.text,
+                      });
+                    }}
+                  >
                     <FcEditImage />
                   </button>
                   <button

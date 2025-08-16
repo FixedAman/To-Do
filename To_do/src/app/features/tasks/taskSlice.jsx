@@ -106,7 +106,7 @@ export const updateTasks = createAsyncThunk(
           .replace(/\s+/g, "");
         return existingNormalized === normalizedText;
       });
-      if (!isDuplicate) {
+      if (isDuplicate) {
         return rejectWithValue("Task already exist");
       }
       await updateDoc(doc(db, "tasks", taskId), {
@@ -175,6 +175,20 @@ const taskSlice = createSlice({
         if (task) {
           task.completed = action.payload.completed;
         }
+      })
+      .addCase(updateTasks.fulfilled, (state, action) => {
+        state.loading = false;
+        const task = state.tasks.find((t) => t.id === action.payload.taskId);
+        if (task) {
+          task.text = action.payload.newUpdateText;
+        }
+      })
+      .addCase(updateTasks.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(updateTasks.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });
