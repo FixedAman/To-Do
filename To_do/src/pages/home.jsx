@@ -33,6 +33,7 @@ const Home = () => {
     if (!taskText || !user.uid) return;
 
     try {
+      // updating the user
       if (editingTask) {
         await dispatch(
           updateTasks({
@@ -44,6 +45,7 @@ const Home = () => {
           setTaskText("")
         );
       } else {
+        //adding tasks
         await dispatch(
           addTaskInFirebase({
             taskText: taskText.trim(),
@@ -57,9 +59,11 @@ const Home = () => {
       alert(error);
     }
   };
+  // deleting user task
   const handleDelete = (taskId) => {
     dispatch(deleteTaskFromFirbase(taskId));
   };
+  //  handle completed button
   const handleToggleComplete = ({ taskId, completed }) => {
     dispatch(
       toggleTaskComplete({
