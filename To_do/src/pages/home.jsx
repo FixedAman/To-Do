@@ -16,6 +16,7 @@ const Home = () => {
   const [taskText, setTaskText] = useState("");
   const [filteredTasks, setFilteredTask] = useState([]);
   const { user, isGuest } = useSelector((state) => state.auth);
+  const [editingTask, setEditingTask] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -29,8 +30,20 @@ const Home = () => {
   }, [tasks]);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (taskText.trim() && user?.uid) {
-      try {
+    if (!taskText || !user.uid) return;
+
+    try {
+      if (editingTask) {
+        await dispatch(
+          updateTasks({
+            newUpdateText: taskText,
+            userId: user.uid,
+            taskId: editingTask,
+          }),
+          setEditingTask(null),
+          setTaskText("")
+        );
+      } else {
         await dispatch(
           addTaskInFirebase({
             taskText: taskText.trim(),
@@ -38,10 +51,10 @@ const Home = () => {
           })
         ).unwrap();
         setTaskText("");
-      } catch (err) {
-        console.log("this is error ", error);
-        alert(error);
       }
+    } catch (err) {
+      console.log("this is error ", error);
+      alert(error);
     }
   };
   const handleDelete = (taskId) => {
@@ -55,14 +68,9 @@ const Home = () => {
       })
     );
   };
-  const handleUpdateText = ({ taskId }, currentText, e) => {
-    setTaskText(e.target.value);
-    const newText = taskText;
-    if (newText && newText.trim() && newText !== currentText) {
-      dispatch(
-        updateTasks({ taskId, newUpdateText: newText, userId: user.uid })
-      );
-    }
+  const handleUpdateText = (task) => {
+    setTaskText(task.text);
+    setEditingTask(task.id);
   };
   return (
     <>
@@ -94,7 +102,7 @@ const Home = () => {
             className="bg-blue-500 text-white  px-4 py-2 rounded disabled:opacity-50
             "
           >
-            {loading ? <Loader /> : "add"}
+            {loading ? <Loader /> : editingTask ? "update" : "add"}
           </button>
         </form>
         {loading && tasks.length === 0 ? (
@@ -126,11 +134,7 @@ const Home = () => {
                     //   handleUpdateText({ taskId: task.id }, task.text)
                     // }
                     onDoubleClick={(e) => {
-                      setTaskText(task.text);
-                      handleUpdateText({
-                        taskId: task.id,
-                        currentText: task.text,
-                      });
+                      handleUpdateText(task);
                     }}
                   >
                     <FcEditImage />
