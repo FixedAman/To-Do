@@ -10,6 +10,7 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "../../firebase/firebaseconfig";
+import { decryptData, encryptData } from "../../../lib/crypto";
 
 // adding task in firebase
 export const addTaskInFirebase = createAsyncThunk(
@@ -34,8 +35,10 @@ export const addTaskInFirebase = createAsyncThunk(
       if (isDuplicate) {
         return rejectWithValue("task already exist");
       }
+
+      const encryptedData = encryptData(taskText);
       const taskRef = await addDoc(collection(db, "tasks"), {
-        text: taskText,
+        text: encryptedData,
         userId,
         completed: false,
         createdAt: new Date().toISOString(),
@@ -58,10 +61,16 @@ export const fetchUserTasksFromFirebase = createAsyncThunk(
         where("userId", "==", userId)
       );
       const querySnapshot = await getDocs(taskQuery);
-      return querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+      return querySnapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          text: decryptData(data.text) || "facing error",
+          completed: data.completed,
+          userId: data.userId,
+          createdAt: data.createdAt,
+        };
+      });
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -109,8 +118,10 @@ export const updateTasks = createAsyncThunk(
       if (isDuplicate) {
         return rejectWithValue("Task already exist");
       }
+      // encryption before updating
+      const encryptedData = encryptData(newUpdateText);
       await updateDoc(doc(db, "tasks", taskId), {
-        text: newUpdateText,
+        text: encryptedData,
       });
       return { taskId, newUpdateText };
     } catch (error) {
