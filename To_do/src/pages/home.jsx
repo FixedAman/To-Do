@@ -12,13 +12,16 @@ import { MdDelete } from "react-icons/md";
 import Loader from "../components/ui/Loader";
 import TaskSearchFilter from "../components/layout/SearchMethod";
 import { FcEditImage } from "react-icons/fc";
+import { auth } from "../app/firebase/firebaseconfig";
+import PopupLogin from "../components/layout/popupLogin";
+import { setGuestMode, signInWithGoogle } from "../app/features/auth/authSlice";
 const Home = () => {
   const [taskText, setTaskText] = useState("");
   const [filteredTasks, setFilteredTask] = useState([]);
   const { user, isGuest } = useSelector((state) => state.auth);
   const [editingTask, setEditingTask] = useState(null);
   const dispatch = useDispatch();
-
+  const [showPopup, setShowPopup] = useState(false);
   useEffect(() => {
     if (user?.uid) {
       dispatch(fetchUserTasksFromFirebase({ userId: user.uid }));
@@ -76,8 +79,28 @@ const Home = () => {
     setTaskText(task.text);
     setEditingTask(task.id);
   };
+  // popup showpopup
+  useEffect(() => {
+    //show popup
+    if (!user) {
+      setShowPopup(true);
+      console.log(user.uid);
+    } else {
+      setShowPopup(false);
+      console.log(user.uid);
+    }
+  }, [user]);
   return (
     <>
+      <div>
+        {showPopup && (
+          <PopupLogin
+            onGuest={() => dispatch(setGuestMode())}
+            onGoogle={() => dispatch(signInWithGoogle())}
+          />
+        )}
+      </div>
+
       <div className="max-w-md mx-auto mt-16 p-4    ">
         <div className="search-and-title flex items-center  mb-8 flex-col">
           <h1 className="text-2xl font-bold mb-4 dark:text-white">

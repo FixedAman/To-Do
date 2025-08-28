@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FcSearch } from "react-icons/fc";
 const TaskSearchFilter = ({ tasks, onFilter }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -20,7 +20,9 @@ const TaskSearchFilter = ({ tasks, onFilter }) => {
     });
   }, [tasks, searchTerm, filter]);
 
-  onFilter(filteredTasks);
+  useEffect(() => {
+    onFilter(filteredTasks);
+  }, [filteredTasks, onFilter]);
   return (
     <div className="flex items-center gap-2 mb-4">
       <input
