@@ -5,10 +5,6 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>To-Do</title>
-  </head>
-  <body class="bg-slate-50 dark:bg-slate-900">
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
     <script>
       // Check for saved theme preference or system preference
       const savedTheme = localStorage.getItem("theme");
@@ -19,7 +15,13 @@
       // Apply theme immediately to prevent FOUC
       if (savedTheme === "dark" || (!savedTheme && systemPrefersDark)) {
         document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
       }
     </script>
+  </head>
+  <body class="bg-slate-50 dark:bg-slate-900">
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

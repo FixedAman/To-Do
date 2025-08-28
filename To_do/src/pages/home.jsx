@@ -84,7 +84,7 @@ const Home = () => {
     //show popup
     if (!user) {
       setShowPopup(true);
-      console.log(user.uid);
+      console.log(user?.uid);
     } else {
       setShowPopup(false);
       console.log(user.uid);
@@ -95,8 +95,10 @@ const Home = () => {
       <div>
         {showPopup && (
           <PopupLogin
+            show={showPopup}
             onGuest={() => dispatch(setGuestMode())}
             onGoogle={() => dispatch(signInWithGoogle())}
+            onClose={() => setShowPopup(false)}
           />
         )}
       </div>

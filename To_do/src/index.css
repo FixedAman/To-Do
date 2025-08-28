@@ -5,4 +5,8 @@ body {
   padding: 0;
   overflow-x: hidden;
 }
+@theme {
+  --dark-mode: class; 
+}
+
 @custom-variant dark (&:where(.dark, .dark *));

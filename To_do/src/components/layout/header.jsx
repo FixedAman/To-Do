@@ -16,8 +16,9 @@ const Header = () => {
   const [isDark, setDark] = useState(() => {
     if (typeof window !== "undefined") {
       const saveMode = localStorage.getItem("darkMode");
-      if (saveMode !== null) return saveMode === true;
-      return window.matchMedia("(prefers-color-scheme: dark)").matches;
+      if (saveMode !== null) return saveMode === "true";
+      return window.matchMedia("(prefers-color-scheme: dark)").matches ;
+      
     }
     return false;
   });
@@ -33,16 +34,7 @@ const Header = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
   const handleToggle = () => {
-    const newMode = !isDark;
-    setDark(newMode);
-    localStorage.setItem("darkMode", newMode);
-    if (newMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-
-    console.log(isDark);
+    setDark((prev) => !prev);
   };
   useEffect(() => {
     if (isDark) {
@@ -50,7 +42,8 @@ const Header = () => {
     } else {
       document.documentElement.classList.remove("dark");
     }
-  }, []);
+    localStorage.setItem("isDark", isDark);
+  }, [isDark]);
   return (
     <header className="w-full bg-zinc-900 text-white shadow fixed top-0 left-0 right-0 z-50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -145,7 +138,7 @@ const Header = () => {
               onClick={handleToggle}
               className=" rounded-full focus:outline-none p-2 focus:ring-white focus:ring hover:"
             >
-              {isDark ? <MdDarkMode /> : <MdOutlineLightMode />}
+              {isDark ? <MdOutlineLightMode /> : <MdDarkMode />}
             </button>
           </div>
         </div>
