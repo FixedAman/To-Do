@@ -12,7 +12,6 @@ import { MdDelete } from "react-icons/md";
 import Loader from "../components/ui/Loader";
 import TaskSearchFilter from "../components/layout/SearchMethod";
 import { FcEditImage } from "react-icons/fc";
-import { auth } from "../app/firebase/firebaseconfig";
 import PopupLogin from "../components/layout/popupLogin";
 import { setGuestMode, signInWithGoogle } from "../app/features/auth/authSlice";
 const Home = () => {
@@ -107,7 +106,7 @@ const Home = () => {
         <div className="search-and-title flex items-center  mb-8 flex-col">
           <h1 className="text-2xl font-bold mb-4 dark:text-white">
             {isGuest ? "Guest Mode" : "My Tasks"}
-          </h1>
+          </h1>   
           <div className="search-bar   mb-12">
             <TaskSearchFilter
               tasks={tasks}
