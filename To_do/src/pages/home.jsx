@@ -14,6 +14,7 @@ import TaskSearchFilter from "../components/layout/SearchMethod";
 import { FcEditImage } from "react-icons/fc";
 import PopupLogin from "../components/layout/popupLogin";
 import { setGuestMode, signInWithGoogle } from "../app/features/auth/authSlice";
+import CategoryManager from "../components/layout/categoryManager";
 const Home = () => {
   const [taskText, setTaskText] = useState("");
   const [filteredTasks, setFilteredTask] = useState([]);
@@ -106,7 +107,7 @@ const Home = () => {
         <div className="search-and-title flex items-center  mb-8 flex-col">
           <h1 className="text-2xl font-bold mb-4 dark:text-white">
             {isGuest ? "Guest Mode" : "My Tasks"}
-          </h1>   
+          </h1>
           <div className="search-bar   mb-12">
             <TaskSearchFilter
               tasks={tasks}
@@ -116,6 +117,7 @@ const Home = () => {
         </div>
 
         <form className="mb-6 gap-2 flex" onSubmit={handleSubmit}>
+          <CategoryManager />
           <input
             type="text"
             className="border  focus:outline-none px-3 py-2 rounded flex-grow dark:text-white"
@@ -158,9 +160,6 @@ const Home = () => {
                   </button>
                   <button
                     disabled={loading}
-                    // onClick={() =>
-                    //   handleUpdateText({ taskId: task.id }, task.text)
-                    // }
                     onDoubleClick={(e) => {
                       handleUpdateText(task);
                     }}
