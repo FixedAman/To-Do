@@ -17,8 +17,7 @@ const Header = () => {
     if (typeof window !== "undefined") {
       const saveMode = localStorage.getItem("darkMode");
       if (saveMode !== null) return saveMode === "true";
-      return window.matchMedia("(prefers-color-scheme: dark)").matches ;
-      
+      return window.matchMedia("(prefers-color-scheme: dark)").matches;
     }
     return false;
   });
