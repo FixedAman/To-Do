@@ -1,15 +1,26 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { HexAlphaColorPicker, HexColorPicker } from "react-colorful";
 import EmojiPicker from "emoji-picker-react";
+import { addCategory } from "../../app/features/tasks/categorySlice";
 const CategoryManager = () => {
   const [name, setName] = useState("");
   const [emoji, setEmoji] = useState(""); // optional user no need to add this if  they dont want
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [color, setColor] = useState("#3b82f6");
+  const { user, isGuest } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const handleAdd = () => {
-    
+    dispatch(
+      addCategory({
+        userId: user.uid,
+        category: {
+          name,
+          emoji,
+          color,
+        },
+      })
+    );
   };
   return (
     <>
@@ -34,7 +45,7 @@ const CategoryManager = () => {
           ></div>
         </div>
         {/* // emoji picker  */}
-        <div className="mb2">
+        <div className="mb-2">
           <button
             type="button"
             onClick={() => setShowEmojiPicker((prev) => !prev)}

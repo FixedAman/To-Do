@@ -6,6 +6,9 @@ export const fetchCategories = createAsyncThunk(
   "categories/fetchCategories",
   async (userId, { rejectWithValue }) => {
     try {
+      if (!userId || typeof userId !== "string") {
+        throw new Error("invalid string problem ");
+      }
       const snapshot = await getDocs(
         collection(db, "users", userId, "categories")
       );
@@ -51,16 +54,18 @@ const categorySlice = createSlice({
       .addCase(fetchCategories.pending, (state) => {
         state.loading = true;
       })
+      .addCase(fetchCategories.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
       .addCase(addCategory.fulfilled, (state, action) => {
+        state.loading = false;
         state.categories.push(action.payload);
       })
       .addCase(addCategory.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchCategories.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
+
       .addCase(addCategory.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;

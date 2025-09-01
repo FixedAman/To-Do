@@ -15,6 +15,7 @@ import { FcEditImage } from "react-icons/fc";
 import PopupLogin from "../components/layout/popupLogin";
 import { setGuestMode, signInWithGoogle } from "../app/features/auth/authSlice";
 import CategoryManager from "../components/layout/categoryManager";
+import { fetchCategories } from "../app/features/tasks/categorySlice";
 const Home = () => {
   const [taskText, setTaskText] = useState("");
   const [filteredTasks, setFilteredTask] = useState([]);
@@ -22,12 +23,16 @@ const Home = () => {
   const [editingTask, setEditingTask] = useState(null);
   const dispatch = useDispatch();
   const [showPopup, setShowPopup] = useState(false);
+  const [selectedCategory, setSelectedCatory] = useState();
   useEffect(() => {
     if (user?.uid) {
       dispatch(fetchUserTasksFromFirebase({ userId: user.uid }));
+      dispatch(fetchCategories(user.uid));
     }
   }, [user, dispatch]);
   const { tasks, loading, error } = useSelector((state) => state.listOfTask);
+
+  // console.log(dispatch(fetchCategories({ userId: user?.uid })));
   useEffect(() => {
     setFilteredTask(tasks);
   }, [tasks]);
@@ -53,6 +58,7 @@ const Home = () => {
           addTaskInFirebase({
             taskText: taskText.trim(),
             userId: user.uid,
+            categoryId: categories.id,
           })
         ).unwrap();
         setTaskText("");
@@ -108,7 +114,7 @@ const Home = () => {
           <h1 className="text-2xl font-bold mb-4 dark:text-white">
             {isGuest ? "Guest Mode" : "My Tasks"}
           </h1>
-          <div className="search-bar   mb-12">
+          <div className="search-bar  mb-12">
             <TaskSearchFilter
               tasks={tasks}
               onFilter={(filter) => setFilteredTask(filter)}

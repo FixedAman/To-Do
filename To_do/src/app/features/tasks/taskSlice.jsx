@@ -15,7 +15,7 @@ import { decryptData, encryptData } from "../../../lib/crypto";
 // adding task in firebase
 export const addTaskInFirebase = createAsyncThunk(
   "tasks/addTask",
-  async ({ taskText, userId }, { rejectWithValue }) => {
+  async ({ taskText, userId, categoryId }, { rejectWithValue }) => {
     try {
       // normalized
       const normalizedInput = taskText.toLowerCase().replace(/\s+/g, "");
@@ -41,6 +41,7 @@ export const addTaskInFirebase = createAsyncThunk(
         text: encryptedData,
         userId,
         completed: false,
+        categoryId,
         createdAt: new Date().toISOString(),
       });
       return { id: taskRef.id, text: taskText, completed: false };
