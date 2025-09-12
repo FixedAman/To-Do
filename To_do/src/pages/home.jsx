@@ -15,7 +15,11 @@ import { FcEditImage } from "react-icons/fc";
 import PopupLogin from "../components/layout/popupLogin";
 import { setGuestMode, signInWithGoogle } from "../app/features/auth/authSlice";
 import CategoryManager from "../components/layout/categoryManager";
-import { fetchCategories } from "../app/features/tasks/categorySlice";
+import {
+  addCategory,
+  fetchCategories,
+} from "../app/features/tasks/categorySlice";
+import { connectFirestoreEmulator } from "firebase/firestore";
 const Home = () => {
   const [taskText, setTaskText] = useState("");
   const [filteredTasks, setFilteredTask] = useState([]);
@@ -23,7 +27,7 @@ const Home = () => {
   const [editingTask, setEditingTask] = useState(null);
   const dispatch = useDispatch();
   const [showPopup, setShowPopup] = useState(false);
-  const [selectedCategory, setSelectedCatory] = useState();
+  const [selectedCategory, setSelectedCategory] = useState(null);
   useEffect(() => {
     if (user?.uid) {
       dispatch(fetchUserTasksFromFirebase({ userId: user.uid }));
@@ -31,8 +35,9 @@ const Home = () => {
     }
   }, [user, dispatch]);
   const { tasks, loading, error } = useSelector((state) => state.listOfTask);
-
-  // console.log(dispatch(fetchCategories({ userId: user?.uid })));
+  const { categories } = useSelector((state) => state.listOfCategory);
+  console.log(categories);
+  console.log("category", selectedCategory);
   useEffect(() => {
     setFilteredTask(tasks);
   }, [tasks]);
@@ -41,7 +46,17 @@ const Home = () => {
     if (!taskText || !user.uid) return;
 
     try {
-      // updating the user
+      //* category adding
+      if (selectedCategory) {
+        await dispatch(
+          addCategory({
+            userId: user.uid,
+            category: selectedCategory,
+          })
+        ).unwrap();
+      }
+
+      //* updating the user
       if (editingTask) {
         await dispatch(
           updateTasks({
@@ -51,9 +66,9 @@ const Home = () => {
           }),
           setEditingTask(null),
           setTaskText("")
-        );
+        ).unwrap();
       } else {
-        //adding tasks
+        //* adding tasks
         await dispatch(
           addTaskInFirebase({
             taskText: taskText.trim(),
@@ -62,17 +77,18 @@ const Home = () => {
           })
         ).unwrap();
         setTaskText("");
+        setSelectedCategory(null);
       }
     } catch (err) {
       console.log("this is error ", error);
       alert(error);
     }
   };
-  // deleting user task
+  //* deleting user task
   const handleDelete = (taskId) => {
     dispatch(deleteTaskFromFirbase(taskId));
   };
-  //  handle completed button
+  //* handle completed button
   const handleToggleComplete = ({ taskId, completed }) => {
     dispatch(
       toggleTaskComplete({
@@ -85,9 +101,9 @@ const Home = () => {
     setTaskText(task.text);
     setEditingTask(task.id);
   };
-  // popup showpopup
+  //* popup showpopup
   useEffect(() => {
-    //show popup
+    //*show popup
     if (!user) {
       setShowPopup(true);
       console.log(user?.uid);
@@ -123,7 +139,7 @@ const Home = () => {
         </div>
 
         <form className="mb-6 gap-2 flex" onSubmit={handleSubmit}>
-          <CategoryManager />
+          <CategoryManager onCategoryChange={selectedCategory} />
           <input
             type="text"
             className="border  focus:outline-none px-3 py-2 rounded flex-grow dark:text-white"

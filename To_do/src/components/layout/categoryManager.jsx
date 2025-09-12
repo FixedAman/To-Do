@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { HexAlphaColorPicker, HexColorPicker } from "react-colorful";
 import EmojiPicker from "emoji-picker-react";
 import { addCategory } from "../../app/features/tasks/categorySlice";
-const CategoryManager = () => {
+import { toast } from "react-toastify";
+const CategoryManager = ({ onCategoryChange }) => {
   const [name, setName] = useState("");
   const [emoji, setEmoji] = useState(""); // optional user no need to add this if  they dont want
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -11,16 +12,21 @@ const CategoryManager = () => {
   const { user, isGuest } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const handleAdd = () => {
-    dispatch(
-      addCategory({
-        userId: user.uid,
-        category: {
-          name,
-          emoji,
-          color,
-        },
-      })
-    );
+    // user must need to add text to add categories
+    if (!taskInput.length === 0) {
+      dispatch(
+        addCategory({
+          userId: user.uid,
+          category: {
+            name,
+            emoji,
+            color,
+          },
+        })
+      );
+    } else {
+      toast("add task first");
+    }
   };
   return (
     <>
@@ -67,7 +73,18 @@ const CategoryManager = () => {
           )}
         </div>
         {/* // addButton  */}
-        <button onClick={handleAdd}>Add category</button>
+        <button
+          type="button"
+          onClick={() =>
+            onCategoryChange({
+              name,
+              emoji,
+              color,
+            })
+          }
+        >
+          use category
+        </button>
       </div>
     </>
   );
