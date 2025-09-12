@@ -46,14 +46,17 @@ const Home = () => {
     if (!taskText || !user.uid) return;
 
     try {
+      //* creating a variable to store the category data after adding then connect to the main task
+      let mainCategoryId;
       //* category adding
       if (selectedCategory) {
-        await dispatch(
+        const newCategory = await dispatch(
           addCategory({
             userId: user.uid,
             category: selectedCategory,
           })
         ).unwrap();
+        mainCategoryId = newCategory.id;
       }
 
       //* updating the user
@@ -73,7 +76,7 @@ const Home = () => {
           addTaskInFirebase({
             taskText: taskText.trim(),
             userId: user.uid,
-            categoryId: categories.id,
+            categoryId: mainCategoryId,
           })
         ).unwrap();
         setTaskText("");
@@ -139,7 +142,7 @@ const Home = () => {
         </div>
 
         <form className="mb-6 gap-2 flex" onSubmit={handleSubmit}>
-          <CategoryManager onCategoryChange={selectedCategory} />
+          <CategoryManager onCategoryChange={setSelectedCategory} />
           <input
             type="text"
             className="border  focus:outline-none px-3 py-2 rounded flex-grow dark:text-white"

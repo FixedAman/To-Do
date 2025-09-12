@@ -9,28 +9,19 @@ const CategoryManager = ({ onCategoryChange }) => {
   const [emoji, setEmoji] = useState(""); // optional user no need to add this if  they dont want
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [color, setColor] = useState("#3b82f6");
-  const { user, isGuest } = useSelector((state) => state.auth);
-  const dispatch = useDispatch();
-  const handleAdd = () => {
-    // user must need to add text to add categories
-    if (!taskInput.length === 0) {
-      dispatch(
-        addCategory({
-          userId: user.uid,
-          category: {
+
+  return (
+    <>
+      <div
+        className="border p-4  rounded dark:bg-slate-800"
+        onChange={() =>
+          onCategoryChange({
             name,
             emoji,
             color,
-          },
-        })
-      );
-    } else {
-      toast("add task first");
-    }
-  };
-  return (
-    <>
-      <div className="border p-4  rounded dark:bg-slate-800">
+          })
+        }
+      >
         <h2 className="font-semibold mb-2 dark:text-white">
           Manage Categories
         </h2>
@@ -73,18 +64,7 @@ const CategoryManager = ({ onCategoryChange }) => {
           )}
         </div>
         {/* // addButton  */}
-        <button
-          type="button"
-          onClick={() =>
-            onCategoryChange({
-              name,
-              emoji,
-              color,
-            })
-          }
-        >
-          use category
-        </button>
+        {/* <button type="button">use category</button> */}
       </div>
     </>
   );
