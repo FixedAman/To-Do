@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { FaCircleCheck } from "react-icons/fa6";
 import {
   addTaskInFirebase,
   deleteTaskFromFirbase,
@@ -8,10 +7,8 @@ import {
   toggleTaskComplete,
   updateTasks,
 } from "../app/features/tasks/taskSlice";
-import { MdDelete } from "react-icons/md";
 import Loader from "../components/ui/Loader";
 import TaskSearchFilter from "../components/layout/SearchMethod";
-import { FcEditImage } from "react-icons/fc";
 import PopupLogin from "../components/layout/popupLogin";
 import { setGuestMode, signInWithGoogle } from "../app/features/auth/authSlice";
 import CategoryManager from "../components/layout/categoryManager";
@@ -19,7 +16,7 @@ import {
   addCategory,
   fetchCategories,
 } from "../app/features/tasks/categorySlice";
-import { connectFirestoreEmulator } from "firebase/firestore";
+import TaskList from "../components/layout/taskSection";
 const Home = () => {
   const [taskText, setTaskText] = useState("");
   const [filteredTasks, setFilteredTask] = useState([]);
@@ -48,8 +45,10 @@ const Home = () => {
     try {
       //* creating a variable to store the category data after adding then connect to the main task
       let mainCategoryId;
+      //* snapshot for category
+      const categoryValue = selectedCategory;
       //* category adding
-      if (selectedCategory) {
+      if (categoryValue) {
         const newCategory = await dispatch(
           addCategory({
             userId: user.uid,
@@ -80,17 +79,14 @@ const Home = () => {
           })
         ).unwrap();
         setTaskText("");
-        setSelectedCategory(null);
       }
+      setSelectedCategory(null);
     } catch (err) {
       console.log("this is error ", error);
       alert(error);
     }
   };
-  //* deleting user task
-  const handleDelete = (taskId) => {
-    dispatch(deleteTaskFromFirbase(taskId));
-  };
+
   //* handle completed button
   const handleToggleComplete = ({ taskId, completed }) => {
     dispatch(
@@ -100,10 +96,16 @@ const Home = () => {
       })
     );
   };
+  //* updatingText
   const handleUpdateText = (task) => {
     setTaskText(task.text);
     setEditingTask(task.id);
   };
+  //* deleting user task
+  const handleDelete = (taskId) => {
+    dispatch(deleteTaskFromFirbase(taskId));
+  };
+
   //* popup showpopup
   useEffect(() => {
     //*show popup
@@ -166,58 +168,14 @@ const Home = () => {
           <p className="text-gray-500">No tasks yet. Add one above!</p>
         ) : (
           <ul className="space-y-2">
-            {filteredTasks.map((task) => (
-              <li
-                key={task.id}
-                className="flex items-center justify-between dark:bg-slate-700 p-3 rounded shadow"
-              >
-                <span className="dark:text-slate-200">{task.text}</span>
-                <div className="button-components flex">
-                  <button
-                    className=" p-2 text-red-500 hover:text-red-700 
-    dark:text-red-400 dark:hover:text-red-300
-    transition-colors duration-200
-    rounded-full hover:bg-red-100 dark:hover:bg-red-900/50"
-                    disabled={loading}
-                    onClick={() => handleDelete(task.id)}
-                  >
-                    <MdDelete />
-                  </button>
-                  <button
-                    disabled={loading}
-                    onDoubleClick={(e) => {
-                      handleUpdateText(task);
-                    }}
-                  >
-                    <FcEditImage />
-                  </button>
-                  <button
-                    className={`p-2 ml-2
-    text-gray-400 hover:text-green-500 
-    dark:text-gray-500 dark:hover:text-green-400
-    transition-colors duration-200
-    rounded-full hover:bg-green-100 dark:hover:bg-green-900/50 
-     
-     `}
-                    disabled={loading}
-                    onClick={() =>
-                      handleToggleComplete({
-                        taskId: task.id,
-                        completed: task.completed,
-                      })
-                    }
-                  >
-                    <FaCircleCheck
-                      className={`${
-                        task.completed
-                          ? "text-green-500 drop-shadow-[0_0_8px_rgba(34,197,94,0.7)]"
-                          : "text-gray-400"
-                      }`}
-                    />
-                  </button>
-                </div>
-              </li>
-            ))}
+            <TaskList
+              filteredTasks={filteredTasks}
+              handleUpdateText={handleUpdateText}
+              onComplete={handleToggleComplete}
+              loading={loading}
+              handleDelete={handleDelete}
+              categoryAdd={categories}
+            />
           </ul>
         )}
       </div>
