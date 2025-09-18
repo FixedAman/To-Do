@@ -3,7 +3,7 @@ import AppLayout from "./components/layout/appLayout";
 import { ToastContainer } from "react-toastify";
 import About from "./pages/about";
 import Home from "./pages/home";
-
+// testing
 const App = () => {
   const router = createBrowserRouter([
     {
