@@ -12,6 +12,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.8.2",
     "@tailwindcss/vite": "^4.1.8",
+    "antd": "^5.27.5",
     "crypto-js": "^4.2.0",
     "emoji-picker-react": "^4.13.2",
     "firebase": "^11.8.1",
