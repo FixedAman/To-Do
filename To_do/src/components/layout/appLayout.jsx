@@ -3,17 +3,17 @@ import Footer from "./footer";
 import Header from "./header";
 import { Layout } from "antd";
 import Logo from "../ui/Logo";
-
+// working on comment fixing sidebar
 const { Header: AntHeader, Sider, Content, Footer: AntFooter } = Layout;
 const AppLayout = () => {
   return (
     <>
       <Layout style={{ minHeight: "100vh" }}>
         <Sider
-          className="sidebar bg-white 
+          className="sidebar
         "
         >
-          sidebar
+          <h1 className=" bg-white ">Siderbar</h1>
         </Sider>
 
         <Layout>
