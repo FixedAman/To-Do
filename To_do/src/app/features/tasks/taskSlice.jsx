@@ -130,6 +130,27 @@ export const updateTasks = createAsyncThunk(
     }
   }
 );
+export const fetchTasksByCategory = createAsyncThunk(
+  "tasks/fetchTasksByCategory",
+  async ({ userId, categoryId }, { dispatch, getState, rejectWithValue }) => {
+    try {
+      //* ensure tasks are loaded /decrypted  via your secure thunk
+      const stateBefore = getState();
+      const alreadyLoaded =
+        stateBefore.tasks &&
+        Array.isArray(stateBefore.tasks.tasks) &&
+        stateBefore.tasks.tasks.length > 0;
+      if (!alreadyLoaded) {
+        await dispatch(fetchUserTasksFromFirebase(userId));
+      }
+      const allTasks = getState().tasks.tasks || [];
+      if (!categoryId || categoryId === "all") return allTasks;
+      return allTasks.filter((t) => t.categoryId === categoryId);
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 const taskSlice = createSlice({
   name: "tasks",
   initialState: {
@@ -201,6 +222,17 @@ const taskSlice = createSlice({
       .addCase(updateTasks.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(fetchTasksByCategory.pending, (s) => {
+        s.loading = true;
+      })
+      .addCase(fetchTasksByCategory.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(fetchTasksByCategory.fulfilled, (state, action) => {
+        state.loading = false;
+        state.tasks = action.payload;
       });
   },
 });

@@ -11,10 +11,12 @@ const AppLayout = () => {
       {/*Header*/}
 
       <Header />
+      <MainSidebar />
 
       {/* main content*/}
-      <MainSidebar />
-      <Outlet />
+      <main className="md:pl-64">
+        <Outlet />
+      </main>
 
       {/* footer */}
 

@@ -1,4 +1,5 @@
-const SiderbarData = () => {
-  return <></>;
-};
-export default SiderbarData;
+export const SidebarData = [
+  {
+    title: "List of Task",
+  },
+];
