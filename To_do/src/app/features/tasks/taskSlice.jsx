@@ -136,14 +136,18 @@ export const fetchTasksByCategory = createAsyncThunk(
     try {
       //* ensure tasks are loaded /decrypted  via your secure thunk
       const stateBefore = getState();
+      const taskSlice = stateBefore?.listOfTask;
       const alreadyLoaded =
-        stateBefore.tasks &&
-        Array.isArray(stateBefore.tasks.tasks) &&
-        stateBefore.tasks.tasks.length > 0;
+        taskSlice &&
+        Array.isArray(taskSlice.tasks) &&
+        taskSlice.tasks.length > 0;
       if (!alreadyLoaded) {
         await dispatch(fetchUserTasksFromFirebase(userId));
       }
-      const allTasks = getState().tasks.tasks || [];
+      const stateAfter = getState();
+      const allTasks = Array.isArray(stateAfter?.listOfTask?.tasks)
+        ? stateAfter.listOfTask.tasks
+        : [];
       if (!categoryId || categoryId === "all") return allTasks;
       return allTasks.filter((t) => t.categoryId === categoryId);
     } catch (error) {

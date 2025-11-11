@@ -1,45 +1,39 @@
-import { useState } from "react";
-import { IconContext } from "react-icons";
-import * as FaIcons from "react-icons/fa";
-import * as AiIcons from "react-icons/ai";
-import { SidebarData } from "./sidebarData";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCategories } from "../../app/features/tasks/categorySlice";
+import { fetchTasksByCategory } from "../../app/features/tasks/taskSlice";
 
 const MainSidebar = () => {
-  const [sidebar, setSidebar] = useState(false);
-  const showSidebar = () => setSidebar(!sidebar);
+  // ** all redux queries
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+  const userId = user.uid;
+  const { categories, loading: catLoading } = useSelector(
+    (state) => state.listOfCategory
+  );
+  const { tasks, loading: taskLoading } = useSelector(
+    (state) => state.listOfTask
+  );
+  const [activeCategory, setActiveCategory] = useState("all");
+  useEffect(() => {
+    if (userId) {
+      dispatch(fetchCategories(userId));
+      dispatch(fetchTasksByCategory({ userId, categoryId: "all" }));
+    }
+  }, [userId, dispatch]);
+  const handleClick = async (catId) => {
+    setActiveCategory(catId);
+    await dispatch(fetchTasksByCategory({ userId, categoryId: catId }));
+  };
   return (
     <>
-      <IconContext.Provider value={{ size: "20px" }}>
-        <div className="navbar md:hidden flex  items-center justify-between  p-3 bg-zinc-950 text-white">
-          <button
-            className="menu-bar bg-amber-300 text-black p-2 rounded"
-            onClick={showSidebar}
-          >
-            <FaIcons.FaBars
-              aria-expanded={sidebar}
-              aria-label={sidebar ? "close menu " : "Open menu"}
-            />
-          </button>
-        </div>
-        <nav className={sidebar ? "nav-menu active" : "nav-menu"}>
-          <ul className="nav-menu-items bg-yellow-500">
-            <li className="navbar-toggle">
-              <button className="menu-bars" onClick={showSidebar}>
-                <AiIcons.AiOutlineClose />
-              </button>
-            </li>
-           {
-            SidebarData.map((item , index)=>{
-              return (
-                <li key={index}>
-                    
-                </li>
-              )
-            })
-           }
-          </ul>
+      <aside className="fixed left-0 h-full w-64 bg-white p-4 z-50 ">
+        <h3>Categories</h3>
+        {"loader will be here "}
+        <nav className="flex flex-col gap-2">
+          <button onClick={() => handleClick("all")}>all</button>
         </nav>
-      </IconContext.Provider>
+      </aside>
     </>
   );
 };
