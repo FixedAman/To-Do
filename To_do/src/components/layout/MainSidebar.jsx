@@ -7,7 +7,7 @@ const MainSidebar = () => {
   // ** all redux queries
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
-  const userId = user.uid;
+  const userId = user?.uid;
   const { categories, loading: catLoading } = useSelector(
     (state) => state.listOfCategory
   );
@@ -32,6 +32,11 @@ const MainSidebar = () => {
         {"loader will be here "}
         <nav className="flex flex-col gap-2">
           <button onClick={() => handleClick("all")}>all</button>
+          <ul>
+            {tasks.map((task) => {
+              <li key={task.id}>{task.text}</li>;
+            })}
+          </ul>
         </nav>
       </aside>
     </>

@@ -139,7 +139,7 @@ export const fetchTasksByCategory = createAsyncThunk(
       const taskSlice = stateBefore?.listOfTask;
       const alreadyLoaded =
         taskSlice &&
-        Array.isArray(taskSlice.tasks) &&
+        Array.isArray(taskSlice?.tasks) &&
         taskSlice.tasks.length > 0;
       if (!alreadyLoaded) {
         await dispatch(fetchUserTasksFromFirebase(userId));
@@ -229,14 +229,16 @@ const taskSlice = createSlice({
       })
       .addCase(fetchTasksByCategory.pending, (s) => {
         s.loading = true;
+        s.error = null;
       })
       .addCase(fetchTasksByCategory.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error?.message || "kichu jhamela hoegache";
       })
       .addCase(fetchTasksByCategory.fulfilled, (state, action) => {
         state.loading = false;
-        state.tasks = action.payload;
+        state.tasks = Array.isArray(action.payload) ? action.payload : [];
+        state.error = null;
       });
   },
 });

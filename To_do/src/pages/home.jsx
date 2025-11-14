@@ -162,7 +162,7 @@ const Home = () => {
             {loading ? <Loader /> : editingTask ? "update" : "add"}
           </button>
         </form>
-        {loading && tasks.length === 0 ? (
+        {loading && tasks?.length === 0 ? (
           <p>Loading Task</p>
         ) : tasks.length === 0 ? (
           <p className="text-gray-500">No tasks yet. Add one above!</p>
