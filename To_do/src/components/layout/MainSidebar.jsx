@@ -14,6 +14,7 @@ const MainSidebar = () => {
   const { tasks, loading: taskLoading } = useSelector(
     (state) => state.listOfTask
   );
+  console.log("this is all : ", categories);
   const [activeCategory, setActiveCategory] = useState("all");
   useEffect(() => {
     if (userId) {
@@ -33,8 +34,8 @@ const MainSidebar = () => {
         <nav className="flex flex-col gap-2">
           <button onClick={() => handleClick("all")}>all</button>
           <ul>
-            {tasks.map((task) => {
-              <li key={task.id}>{task.text}</li>;
+            {categories.map((cat) => {
+              return <li key={cat.id} className="bg-blue-500">{cat.name}</li>;
             })}
           </ul>
         </nav>
