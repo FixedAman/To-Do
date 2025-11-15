@@ -69,6 +69,7 @@ export const fetchUserTasksFromFirebase = createAsyncThunk(
           text: decryptData(data.text) || "facing error",
           completed: data.completed,
           userId: data.userId,
+          categoryId: data.categoryId,
           createdAt: data.createdAt,
         };
       });

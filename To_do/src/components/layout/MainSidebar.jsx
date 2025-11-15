@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../../app/features/tasks/categorySlice";
 import { fetchTasksByCategory } from "../../app/features/tasks/taskSlice";
-
+import { FaArrowDown, FaRainbow } from "react-icons/fa6";
+import { FaArrowUp } from "react-icons/fa";
 const MainSidebar = () => {
   // ** all redux queries
   const dispatch = useDispatch();
@@ -14,6 +15,7 @@ const MainSidebar = () => {
   const { tasks, loading: taskLoading } = useSelector(
     (state) => state.listOfTask
   );
+  const [dropDown, setDropDown] = useState(false);
   console.log("this is all : ", categories);
   const [activeCategory, setActiveCategory] = useState("all");
   useEffect(() => {
@@ -26,6 +28,7 @@ const MainSidebar = () => {
     setActiveCategory(catId);
     await dispatch(fetchTasksByCategory({ userId, categoryId: catId }));
   };
+
   return (
     <>
       <aside className="fixed left-0 h-full w-64 bg-white p-4 z-50 ">
@@ -35,7 +38,15 @@ const MainSidebar = () => {
           <button onClick={() => handleClick("all")}>all</button>
           <ul>
             {categories.map((cat) => {
-              return <li key={cat.id} className="bg-blue-500">{cat.name}</li>;
+              return (
+                <li
+                  key={cat.id}
+                  className="bg-blue-500"
+                  onClick={() => setDropDown(!false)}
+                >
+                  {cat.name} {dropDown ? <FaArrowDown/> : <FaArrowUp/>}
+                </li>
+              );
             })}
           </ul>
         </nav>
