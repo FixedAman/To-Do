@@ -31,6 +31,7 @@ const MainSidebar = () => {
 
   return (
     <>
+    {/* changing the ui in todo list  */}
       <aside className="fixed left-0 h-full w-64 bg-white p-4 z-50 ">
         <h3>Categories</h3>
         {"loader will be here "}
