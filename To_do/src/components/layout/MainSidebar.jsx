@@ -28,10 +28,13 @@ const MainSidebar = () => {
     setActiveCategory(catId);
     await dispatch(fetchTasksByCategory({ userId, categoryId: catId }));
   };
-
+  const handleToggle = () => {
+    setDropDown(!dropDown);
+  };
+  console.log(dropDown);
   return (
     <>
-    {/* changing the ui in todo list  */}
+      {/* changing the ui in todo list  */}
       <aside className="fixed left-0 h-full w-64 bg-white p-4 z-50 ">
         <h3>Categories</h3>
         {"loader will be here "}
@@ -42,13 +45,25 @@ const MainSidebar = () => {
               return (
                 <li
                   key={cat.id}
-                  className="bg-blue-500"
-                  onClick={() => setDropDown(!false)}
+                  className="bg-blue-500 flex "
+                  onClick={handleToggle}
                 >
-                  {cat.name} {dropDown ? <FaArrowDown/> : <FaArrowUp/>}
+                  {cat.name}{" "}
+                  <>
+                    {dropDown ? (
+                      <FaArrowDown className="mt-2" />
+                    ) : (
+                      <FaArrowUp className="mt-2" />
+                    )}
+                  </>
                 </li>
               );
             })}
+            {dropDown
+              ? tasks.map((task) => {
+                  return <li key={task.id}>{task.text}</li>;
+                })
+              : ""}
           </ul>
         </nav>
       </aside>
