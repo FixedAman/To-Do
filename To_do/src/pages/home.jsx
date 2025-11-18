@@ -143,11 +143,11 @@ const Home = () => {
           </div>
         </div>
 
-        <form className="mb-6 gap-2 flex" onSubmit={handleSubmit}>
+        <form className="mb-6 gap-2 " onSubmit={handleSubmit}>
           <CategoryManager onCategoryChange={setSelectedCategory} />
           <input
             type="text"
-            className="border  focus:outline-none px-3 py-2 rounded flex-grow dark:text-white"
+            className="border  focus:outline-none px-3 py-2 rounded flex-grow dark:text-white mt-2 w-full"
             value={taskText}
             placeholder="Enter your task"
             onChange={(e) => setTaskText(e.target.value)}

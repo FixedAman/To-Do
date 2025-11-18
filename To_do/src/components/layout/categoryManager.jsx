@@ -13,7 +13,7 @@ const CategoryManager = ({ onCategoryChange }) => {
   return (
     <>
       <div
-        className="border p-4  rounded dark:bg-slate-800"
+        className="border p-4  rounded dark:bg-slate-800 w-1/"
         onChange={() =>
           onCategoryChange({
             name,
@@ -33,7 +33,7 @@ const CategoryManager = ({ onCategoryChange }) => {
           placeholder="Category name"
         />
         {/* // color picker  */}
-        <div className="mb-3">
+        <div className="mb-3 ">
           <p className="mb-1 dark:text-white">Pick a color : </p>
           <HexAlphaColorPicker color={color} onChange={setColor} />
           <div
