@@ -16,25 +16,22 @@ const MainSidebar = () => {
   const { tasks, loading: taskLoading } = useSelector(
     (state) => state.listOfTask
   );
-  const [dropDown, setDropDown] = useState(false);
   console.log("this is all : ", categories);
   const [openCategoryId, setOpenCategoryId] = useState(null);
   const [activeCategory, setActiveCategory] = useState("all");
   useEffect(() => {
     if (userId) {
       dispatch(fetchCategories(userId));
-      dispatch(fetchTasksByCategory({ userId, categoryId: "all" }));
     }
   }, [userId, dispatch]);
   const handleClick = async (catId) => {
     setActiveCategory(catId);
-    console.log(catId);
-    // fetching task clicked category
+    console.log("this is elon cartID", catId);
+    setOpenCategoryId((prev) => (prev === catId ? null : catId));
+    //** */ fetching task clicked category
     await dispatch(fetchTasksByCategory({ userId, categoryId: catId }));
   };
-  const handleToggle = () => {
-    setDropDown(!dropDown);
-  };
+
   /** helper function to check  if the current category is open  */
   const isCategoryOpen = (catId) => openCategoryId === catId;
 
@@ -49,13 +46,10 @@ const MainSidebar = () => {
           <ul>
             {categories.map((cat) => {
               const isOpen = isCategoryOpen(cat.id);
+
               return (
-                <li
-                  key={cat.id}
-                  className="bg-blue-500 flex "
-                  onClick={handleToggle}
-                >
-                  <div onClick={() => handleClick(cat.id)}>
+                <li key={cat.id} className="bg-blue-500 flex flex-col ">
+                  <div onClick={() => handleClick(cat.id)} className="flex">
                     {cat.name}
                     {isOpen ? (
                       <FaArrowDown className="w-4 h-4" />
@@ -71,7 +65,7 @@ const MainSidebar = () => {
                         ? tasks.map((task) => {
                             return <li key={task.id}>{task.text}</li>;
                           })
-                        : ""}
+                        : null}
                     </ul>
                   )}
                 </li>
