@@ -31,10 +31,9 @@ const Home = () => {
      
     }
   }, [user, dispatch]);
-  const { tasks, loading, error } = useSelector((state) => state.listOfTask);
+  const { tasks, loading, error } = useSelector((state) => state?.listOfTask);
   const { categories } = useSelector((state) => state.listOfCategory);
-  console.log(categories);
-  console.log("category", selectedCategory);
+
   useEffect(() => {
     setFilteredTask(tasks);
   }, [tasks]);

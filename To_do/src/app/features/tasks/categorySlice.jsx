@@ -27,11 +27,12 @@ export const addCategory = createAsyncThunk(
   "category/addCategory",
   async ({ userId, category }, { rejectWithValue }) => {
     try {
+      const newCategory = { ...category, userId };
       const ref = await addDoc(
         collection(db, "users", userId, "categories"),
-        category
+        newCategory
       );
-      return { id: ref.id, ...category };
+      return { id: ref.id, ...newCategory };
     } catch (error) {
       return rejectWithValue(error.message);
     }
