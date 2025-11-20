@@ -10,6 +10,7 @@ const MainSidebar = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const userId = user?.uid;
+  console.log("this is userID", userId);
   const { categories, loading: catLoading } = useSelector(
     (state) => state.listOfCategory
   );
@@ -25,6 +26,10 @@ const MainSidebar = () => {
     }
   }, [userId, dispatch]);
   const handleClick = async (catId) => {
+    if (!userId) {
+      console.warn("No userId , skipFetchCategory");
+      return;
+    }
     setActiveCategory(catId);
     console.log("this is elon cartID", catId);
     setOpenCategoryId((prev) => (prev === catId ? null : catId));

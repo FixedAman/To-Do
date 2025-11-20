@@ -52,10 +52,11 @@ export const addTaskInFirebase = createAsyncThunk(
 );
 export const fetchUserTasksFromFirebase = createAsyncThunk(
   "tasks/fetchTasks",
-  async ({ userId }, { rejectWithValue }) => {
+  async (userId, { rejectWithValue }) => {
     try {
       if (!userId) {
-        throw new Error("user id is missing");
+        console.log("ekhane problem ", userId);
+        throw new Error("userId te problem");
       }
       const taskQuery = query(
         collection(db, "tasks"),

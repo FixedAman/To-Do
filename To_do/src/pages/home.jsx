@@ -28,7 +28,6 @@ const Home = () => {
   useEffect(() => {
     if (user?.uid) {
       dispatch(fetchUserTasksFromFirebase({ userId: user.uid }));
-     
     }
   }, [user, dispatch]);
   const { tasks, loading, error } = useSelector((state) => state?.listOfTask);
