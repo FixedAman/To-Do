@@ -9,8 +9,7 @@ const MainSidebar = () => {
   // ** all redux queries
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
-  const userId = user?.uid;
-  console.log("this is userID", userId);
+
   const { categories, loading: catLoading } = useSelector(
     (state) => state.listOfCategory
   );
@@ -21,12 +20,12 @@ const MainSidebar = () => {
   const [openCategoryId, setOpenCategoryId] = useState(null);
   const [activeCategory, setActiveCategory] = useState("all");
   useEffect(() => {
-    if (userId) {
-      dispatch(fetchCategories(userId));
+    if (user) {
+      dispatch(fetchCategories(user.uid));
     }
-  }, [userId, dispatch]);
+  }, [user, dispatch]);
   const handleClick = async (catId) => {
-    if (!userId) {
+    if (!user) {
       console.warn("No userId , skipFetchCategory");
       return;
     }
@@ -34,7 +33,9 @@ const MainSidebar = () => {
     console.log("this is elon cartID", catId);
     setOpenCategoryId((prev) => (prev === catId ? null : catId));
     //** */ fetching task clicked category
-    await dispatch(fetchTasksByCategory({ userId, categoryId: catId }));
+    await dispatch(
+      fetchTasksByCategory({ userId: user?.uid, categoryId: catId })
+    );
   };
 
   /** helper function to check  if the current category is open  */

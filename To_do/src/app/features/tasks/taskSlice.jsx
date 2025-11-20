@@ -52,12 +52,12 @@ export const addTaskInFirebase = createAsyncThunk(
 );
 export const fetchUserTasksFromFirebase = createAsyncThunk(
   "tasks/fetchTasks",
-  async (userId, { rejectWithValue }) => {
+  async ({ userId }, { rejectWithValue }) => {
     try {
       if (!userId) {
-        console.log("ekhane problem ", userId);
         throw new Error("userId te problem");
       }
+      console.log("ekhane problem ", userId);
       const taskQuery = query(
         collection(db, "tasks"),
         where("userId", "==", userId)
@@ -137,6 +137,7 @@ export const fetchTasksByCategory = createAsyncThunk(
   async ({ userId, categoryId }, { dispatch, getState, rejectWithValue }) => {
     try {
       //* ensure tasks are loaded /decrypted  via your secure thunk
+      console.log("fetching from taskByCategory", userId);
       const stateBefore = getState();
       const taskSlice = stateBefore?.listOfTask;
       const alreadyLoaded =
@@ -144,7 +145,7 @@ export const fetchTasksByCategory = createAsyncThunk(
         Array.isArray(taskSlice?.tasks) &&
         taskSlice.tasks.length > 0;
       if (!alreadyLoaded) {
-        await dispatch(fetchUserTasksFromFirebase(userId));
+        await dispatch(fetchUserTasksFromFirebase({ userId }));
       }
       const stateAfter = getState();
       const allTasks = Array.isArray(stateAfter?.listOfTask?.tasks)
