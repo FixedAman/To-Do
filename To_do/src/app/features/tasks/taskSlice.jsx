@@ -162,6 +162,7 @@ const taskSlice = createSlice({
   name: "tasks",
   initialState: {
     tasks: [],
+    allTasks: [],
     loading: false,
     error: null,
   },
@@ -178,6 +179,7 @@ const taskSlice = createSlice({
       .addCase(addTaskInFirebase.fulfilled, (state, action) => {
         state.loading = false;
         state.tasks.push(action.payload);
+        state.allTasks.push(action.payload);
       })
       .addCase(fetchUserTasksFromFirebase.pending, (state) => {
         state.loading = true;
@@ -189,6 +191,7 @@ const taskSlice = createSlice({
       .addCase(fetchUserTasksFromFirebase.fulfilled, (state, action) => {
         state.loading = false;
         state.tasks = action.payload;
+        state.allTasks = action.payload;
       })
       .addCase(deleteTaskFromFirbase.pending, (state, action) => {
         state.loading = true;
@@ -200,6 +203,9 @@ const taskSlice = createSlice({
       .addCase(deleteTaskFromFirbase.fulfilled, (state, action) => {
         state.loading = false;
         state.tasks = state.tasks.filter((task) => task.id !== action.payload);
+        state.allTasks = state.allTasks.filter(
+          (task) => task.id !== action.payload
+        );
       })
       .addCase(toggleTaskComplete.pending, (state, action) => {
         state.loading = true;
@@ -212,8 +218,13 @@ const taskSlice = createSlice({
         const task = state.tasks.find(
           (task) => task.id === action.payload.taskId
         );
-        if (task) {
+        const allTasks = state.allTasks.find(
+          (task) => task.id === action.payload.taskId
+        );
+
+        if (task && allTasks) {
           task.completed = action.payload.completed;
+          allTasks.completed = action.payload.completed;
         }
       })
       .addCase(updateTasks.fulfilled, (state, action) => {

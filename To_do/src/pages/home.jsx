@@ -30,7 +30,9 @@ const Home = () => {
       dispatch(fetchUserTasksFromFirebase({ userId: user.uid }));
     }
   }, [user, dispatch]);
-  const { tasks, loading, error } = useSelector((state) => state?.listOfTask);
+  const { allTasks, tasks, loading, error } = useSelector(
+    (state) => state?.listOfTask
+  );
   const { categories } = useSelector((state) => state.listOfCategory);
 
   useEffect(() => {
@@ -135,7 +137,7 @@ const Home = () => {
           </h1>
           <div className="search-bar  mb-12">
             <TaskSearchFilter
-              tasks={tasks}
+              tasks={allTasks}
               onFilter={(filter) => setFilteredTask(filter)}
             />
           </div>
@@ -161,7 +163,7 @@ const Home = () => {
           </button>
         </form>
         {loading && tasks?.length === 0 ? (
-          <p>Loading Task</p>
+          <Loader />
         ) : tasks.length === 0 ? (
           <p className="text-gray-500">No tasks yet. Add one above!</p>
         ) : (
