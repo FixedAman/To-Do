@@ -36,8 +36,8 @@ const Home = () => {
   const { categories } = useSelector((state) => state.listOfCategory);
 
   useEffect(() => {
-    setFilteredTask(tasks);
-  }, [tasks]);
+    setFilteredTask(allTasks);
+  }, [allTasks]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!taskText || !user.uid) return;
@@ -111,10 +111,8 @@ const Home = () => {
     //*show popup
     if (!user) {
       setShowPopup(true);
-      console.log(user?.uid);
     } else {
       setShowPopup(false);
-      console.log(user.uid);
     }
   }, [user]);
   return (

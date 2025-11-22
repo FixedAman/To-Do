@@ -230,8 +230,12 @@ const taskSlice = createSlice({
       .addCase(updateTasks.fulfilled, (state, action) => {
         state.loading = false;
         const task = state.tasks.find((t) => t.id === action.payload.taskId);
-        if (task) {
+        const allTasks = state.allTasks.find(
+          (t) => t.id === action.payload.taskId
+        );
+        if (task && allTasks) {
           task.text = action.payload.newUpdateText;
+          allTasks.text = action.payload.newUpdateText;
         }
       })
       .addCase(updateTasks.pending, (state, action) => {
