@@ -160,9 +160,9 @@ const Home = () => {
             {loading ? <Loader /> : editingTask ? "update" : "add"}
           </button>
         </form>
-        {loading && tasks?.length === 0 ? (
+        {loading && allTasks?.length === 0 ? (
           <Loader />
-        ) : tasks.length === 0 ? (
+        ) : allTasks.length === 0 ? (
           <p className="text-gray-500">No tasks yet. Add one above!</p>
         ) : (
           <ul className="space-y-2">

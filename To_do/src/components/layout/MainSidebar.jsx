@@ -24,6 +24,7 @@ const MainSidebar = () => {
       dispatch(fetchCategories(user.uid));
     }
   }, [user, dispatch]);
+
   const handleClick = async (catId) => {
     if (!user) {
       console.warn("No userId , skipFetchCategory");
@@ -37,14 +38,22 @@ const MainSidebar = () => {
       fetchTasksByCategory({ userId: user?.uid, categoryId: catId })
     );
   };
-
+  // useEffect(() => {
+  //   const isReload =
+  //     performance.navigation.type === performance.navigation.TYPE_RELOAD;
+  //   if (isReload) {
+  //     alert("page reload!");
+  //   } else {
+  //     alert("page not found!");
+  //   }
+  // }, [handleClick]);
   /** helper function to check  if the current category is open  */
   const isCategoryOpen = (catId) => openCategoryId === catId;
 
   return (
     <>
       {/* changing the ui in todo list  */}
-      <aside className="fixed left-0 h-full w-64 bg-white p-4 z-50 ">
+      <aside className="fixed left-0 h-full w-64 bg-white dark:bg-black p-4 z-50  shadow-md">
         <h3>Categories</h3>
         {catLoading ? <Loader /> : null}
         <nav className="flex flex-col gap-2">
@@ -54,7 +63,7 @@ const MainSidebar = () => {
               const isOpen = isCategoryOpen(cat.id);
 
               return (
-                <li key={cat.id} className="bg-blue-500 flex flex-col ">
+                <li key={cat.id} className=" flex flex-col ">
                   <div onClick={() => handleClick(cat.id)} className="flex">
                     {cat.name}
                     {isOpen ? (
