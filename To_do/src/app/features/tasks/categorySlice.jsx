@@ -1,5 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import { db } from "../../firebase/firebaseconfig";
 
 export const fetchCategories = createAsyncThunk(
@@ -27,11 +34,16 @@ export const addCategory = createAsyncThunk(
   "category/addCategory",
   async ({ userId, category }, { rejectWithValue }) => {
     try {
+      const q = query(collection(db, "users"), where("users" === userId));
+      const querySnapshot = await getDocs(q);
+      console.log("this is query" ,querySnapshot);
       const newCategory = { ...category, userId };
+
       const ref = await addDoc(
         collection(db, "users", userId, "categories"),
         newCategory
       );
+
       return { id: ref.id, ...newCategory };
     } catch (error) {
       return rejectWithValue(error.message);

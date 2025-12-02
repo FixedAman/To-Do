@@ -54,10 +54,10 @@ const MainSidebar = () => {
     <>
       {/* changing the ui in todo list  */}
       <aside
-        className="fixed left-0 top-0 h-full w-64 
+        className="fixed left-0  w-64 
                  bg-white dark:bg-zinc-900 
                  border-r border-gray-200 dark:border-zinc-800
-                 p-4 z-50 dark:text-white"
+                 p-4 z-50 dark:text-white overflow-y-auto h-full"
       >
         <h3 className="text-lg font-semibold pb-2 mb-4 border-b border-gray-300 dark:border-zinc-700">
           Categories
@@ -108,12 +108,12 @@ const MainSidebar = () => {
                   {isOpen && !taskLoading && (
                     <ul className="ml-4 mt-1 space-y-1 border-l border-gray-300 dark:border-zinc-700 pl-3">
                       {tasks.length > 0 ? (
-                        tasks.map((task) => (
+                        tasks.map((task, index) => (
                           <li
-                            key={task.id}
+                            key={index}
                             className="text-sm text-gray-700 dark:text-gray-300"
                           >
-                            • {task.text}
+                            {index + 1}. {task.text}
                           </li>
                         ))
                       ) : (

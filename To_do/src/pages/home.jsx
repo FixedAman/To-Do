@@ -30,9 +30,11 @@ const Home = () => {
       dispatch(fetchUserTasksFromFirebase({ userId: user.uid }));
     }
   }, [user, dispatch]);
-  const { allTasks, tasks, loading, error } = useSelector(
-    (state) => state?.listOfTask
-  );
+  const {
+    allTasks,
+    loading: allTaskLoader,
+    error,
+  } = useSelector((state) => state?.listOfTask);
   const { categories } = useSelector((state) => state.listOfCategory);
 
   useEffect(() => {
@@ -149,18 +151,18 @@ const Home = () => {
             value={taskText}
             placeholder="Enter your task"
             onChange={(e) => setTaskText(e.target.value)}
-            disabled={loading}
+            disabled={allTaskLoader}
           />
           <button
             type="submit"
-            disabled={loading || !taskText.trim()}
-            className="bg-blue-500 text-white  px-4 py-2 rounded disabled:opacity-50
+            disabled={allTaskLoader || !taskText.trim()}
+            className="bg-blue-500 text-white   p-2 rounded disabled:opacity-50
             "
           >
-            {loading ? <Loader /> : editingTask ? "update" : "add"}
+            {allTaskLoader ? <Loader /> : editingTask ? "update" : "add"}
           </button>
         </form>
-        {loading && allTasks?.length === 0 ? (
+        {allTaskLoader && allTasks?.length === 0 ? (
           <Loader />
         ) : allTasks.length === 0 ? (
           <p className="text-gray-500">No tasks yet. Add one above!</p>
@@ -170,7 +172,7 @@ const Home = () => {
               filteredTasks={filteredTasks}
               handleUpdateText={handleUpdateText}
               onComplete={handleToggleComplete}
-              loading={loading}
+              loading={allTaskLoader}
               handleDelete={handleDelete}
               categoryAdd={categories}
             />
