@@ -53,34 +53,72 @@ const MainSidebar = () => {
   return (
     <>
       {/* changing the ui in todo list  */}
-      <aside className="fixed left-0 h-full w-64 bg-white dark:bg-black p-4 z-50  shadow-md">
-        <h3>Categories</h3>
-        {catLoading ? <Loader /> : null}
+      <aside
+        className="fixed left-0 top-0 h-full w-64 
+                 bg-white dark:bg-zinc-900 
+                 border-r border-gray-200 dark:border-zinc-800
+                 p-4 z-50 dark:text-white"
+      >
+        <h3 className="text-lg font-semibold pb-2 mb-4 border-b border-gray-300 dark:border-zinc-700">
+          Categories
+        </h3>
+
+        {catLoading && <Loader />}
+
         <nav className="flex flex-col gap-2">
-          <button onClick={() => handleClick("all")}>all</button>
-          <ul>
+          {/* All button */}
+          <button
+            onClick={() => handleClick("all")}
+            className="text-left px-3 py-2 rounded 
+                 hover:bg-gray-100 dark:hover:bg-zinc-800"
+          >
+            All
+          </button>
+
+          <ul className="space-y-2">
             {categories.map((cat) => {
               const isOpen = isCategoryOpen(cat.id);
 
               return (
-                <li key={cat.id} className=" flex flex-col ">
-                  <div onClick={() => handleClick(cat.id)} className="flex">
-                    {cat.name}
+                <li key={cat.id} className="flex flex-col">
+                  {/* Category row */}
+                  <button
+                    onClick={() => handleClick(cat.id)}
+                    className="flex items-center justify-between 
+                         px-3 py-2 rounded text-left 
+                         hover:bg-gray-100 dark:hover:bg-zinc-800"
+                  >
+                    <span>{cat.name}</span>
+
                     {isOpen ? (
                       <FaArrowDown className="w-4 h-4" />
                     ) : (
                       <FaArrowUp className="w-4 h-4" />
                     )}
-                  </div>
-                  {isOpen && taskLoading && <Loader />}
-                  {/* // here the task list  */}
+                  </button>
+
+                  {/* Loader under category */}
+                  {isOpen && taskLoading && (
+                    <div className="pl-4 pt-1">
+                      <Loader />
+                    </div>
+                  )}
+
+                  {/* Tasks under category */}
                   {isOpen && !taskLoading && (
-                    <ul>
-                      {tasks.length > 0
-                        ? tasks.map((task) => {
-                            return <li key={task.id}>{task.text}</li>;
-                          })
-                        : null}
+                    <ul className="ml-4 mt-1 space-y-1 border-l border-gray-300 dark:border-zinc-700 pl-3">
+                      {tasks.length > 0 ? (
+                        tasks.map((task) => (
+                          <li
+                            key={task.id}
+                            className="text-sm text-gray-700 dark:text-gray-300"
+                          >
+                            • {task.text}
+                          </li>
+                        ))
+                      ) : (
+                        <li className="text-sm text-gray-400">No tasks</li>
+                      )}
                     </ul>
                   )}
                 </li>

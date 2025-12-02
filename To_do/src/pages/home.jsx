@@ -145,7 +145,7 @@ const Home = () => {
           <CategoryManager onCategoryChange={setSelectedCategory} />
           <input
             type="text"
-            className="border  focus:outline-none px-3 py-2 rounded flex-grow dark:text-white mt-2 w-full"
+            className="border  focus:outline-none px-3 py-2 rounded dark:text-white mt-2 "
             value={taskText}
             placeholder="Enter your task"
             onChange={(e) => setTaskText(e.target.value)}

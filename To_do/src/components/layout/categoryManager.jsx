@@ -33,16 +33,16 @@ const CategoryManager = ({ onCategoryChange }) => {
           placeholder="Category name"
         />
         {/* // color picker  */}
-        <div className="mb-3 ">
+        {/* <div className="mb-3 ">
           <p className="mb-1 dark:text-white">Pick a color : </p>
           <HexAlphaColorPicker color={color} onChange={setColor} />
           <div
             className="w-8 h-8 rounded-full mt-2 border"
             style={{ backgroundColor: color }}
           ></div>
-        </div>
+        </div> */}
         {/* // emoji picker  */}
-        <div className="mb-2">
+        {/* <div className="mb-2">
           <button
             type="button"
             onClick={() => setShowEmojiPicker((prev) => !prev)}
@@ -50,7 +50,9 @@ const CategoryManager = ({ onCategoryChange }) => {
           >
             {emoji || "pick emoji"}
           </button>
-          {showEmojiPicker && (
+        </div> */}
+        
+        {/* {showEmojiPicker && (
             <>
               <div className="mt-2">
                 <EmojiPicker
@@ -62,7 +64,7 @@ const CategoryManager = ({ onCategoryChange }) => {
               </div>
             </>
           )}
-        </div>
+        </div> */}
         {/* // addButton  */}
         {/* <button type="button">use category</button> */}
       </div>
