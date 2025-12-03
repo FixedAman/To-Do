@@ -17,8 +17,6 @@ const CategoryManager = ({ onCategoryChange }) => {
         onChange={() =>
           onCategoryChange({
             name,
-            emoji,
-            color,
           })
         }
       >
@@ -51,7 +49,7 @@ const CategoryManager = ({ onCategoryChange }) => {
             {emoji || "pick emoji"}
           </button>
         </div> */}
-        
+
         {/* {showEmojiPicker && (
             <>
               <div className="mt-2">

@@ -34,9 +34,10 @@ export const addCategory = createAsyncThunk(
   "category/addCategory",
   async ({ userId, category }, { rejectWithValue }) => {
     try {
-      const q = query(collection(db, "users"), where("users" === userId));
+      const normalizedCategory = category.toLowerCase().replace(/\s+/g, "");
+      const q = query(collection(db, "users", userId, "categories"));
       const querySnapshot = await getDocs(q);
-      console.log("this is query" ,querySnapshot);
+      const isCategoryExist = querySnapshot.docs.some((doc) => doc.data().name);
       const newCategory = { ...category, userId };
 
       const ref = await addDoc(
