@@ -1,15 +1,11 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { HexAlphaColorPicker, HexColorPicker } from "react-colorful";
-import EmojiPicker from "emoji-picker-react";
-import { addCategory } from "../../app/features/tasks/categorySlice";
-import { toast } from "react-toastify";
+
 const CategoryManager = ({ onCategoryChange }) => {
   const [name, setName] = useState("");
   const [emoji, setEmoji] = useState(""); // optional user no need to add this if  they dont want
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [color, setColor] = useState("#3b82f6");
-
+ 
   return (
     <>
       <div

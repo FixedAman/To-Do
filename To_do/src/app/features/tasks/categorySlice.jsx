@@ -5,6 +5,7 @@ import {
   doc,
   getDocs,
   query,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { db } from "../../firebase/firebaseconfig";
@@ -34,18 +35,36 @@ export const addCategory = createAsyncThunk(
   "category/addCategory",
   async ({ userId, category }, { rejectWithValue }) => {
     try {
-      const normalizedCategory = category.toLowerCase().replace(/\s+/g, "");
+      if (!userId) return rejectWithValue("userId is misssing!");
+      if (!category?.name)
+        return rejectWithValue("whole category name in data is missing!");
+      const name = category.name.trim();
+      const normalized = category.name.toLowerCase().replace(/\s+/g, "");
       const q = query(collection(db, "users", userId, "categories"));
-      const querySnapshot = await getDocs(q);
-      const isCategoryExist = querySnapshot.docs.some((doc) => doc.data().name);
-      const newCategory = { ...category, userId };
+      const snap = await getDocs(q);
+      const existingDoc = snap.docs.find((doc) => {
+        const exist = doc.data().name.toLowerCase().replace(/\s+/g, "");
+        return normalized === exist;
+      });
+      if (existingDoc) {
+        return {
+          id: existingDoc.id,
+          ...existingDoc.data(),
+        };
+      } else {
+        const newCategoryData = {
+          name,
+          normalized,
+          createdAt: new Date().toISOString(),
+          userId,
+        };
 
-      const ref = await addDoc(
-        collection(db, "users", userId, "categories"),
-        newCategory
-      );
-
-      return { id: ref.id, ...newCategory };
+        const ref = await addDoc(
+          collection(db, "users", userId, "categories"),
+          newCategoryData
+        );
+        return { id: ref.id, ...newCategoryData };
+      }
     } catch (error) {
       return rejectWithValue(error.message);
     }

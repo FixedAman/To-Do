@@ -67,10 +67,10 @@ const Home = () => {
             newUpdateText: taskText,
             userId: user.uid,
             taskId: editingTask,
-          }),
-          setEditingTask(null),
-          setTaskText("")
+          })
         ).unwrap();
+        setEditingTask(null);
+        setTaskText("");
       } else {
         //* adding tasks
         await dispatch(
@@ -80,12 +80,13 @@ const Home = () => {
             categoryId: mainCategoryId,
           })
         ).unwrap();
-        setTaskText("");
       }
       setSelectedCategory(null);
+      setTaskText("");
     } catch (err) {
-      console.log("this is error ", error);
-      alert(error);
+      console.log(" Add/update task failed", err);
+
+      alert(err?.message || "Failed to update and delete Task");
     }
   };
 
