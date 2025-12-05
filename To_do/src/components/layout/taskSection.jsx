@@ -7,7 +7,7 @@ const TaskList = ({
   handleUpdateText,
   loading,
   handleDelete,
-  categoryAdd,
+  
 }) => {
   return (
     <>

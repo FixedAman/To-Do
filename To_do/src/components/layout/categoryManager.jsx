@@ -1,21 +1,24 @@
 import { useState } from "react";
 
-const CategoryManager = ({ onCategoryChange }) => {
+const CategoryManager = ({
+  onCategoryChange,
+  disabled = true,
+  sendOnBlur = true,
+}) => {
   const [name, setName] = useState("");
   const [emoji, setEmoji] = useState(""); // optional user no need to add this if  they dont want
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [color, setColor] = useState("#3b82f6");
- 
+  const handleInputChange = (e) => {
+    const v = e.target.value ?? "";
+    setName(v);
+    if (typeof onCategoryChange === "function") {
+      onCategoryChange(newval);
+    }
+  };
   return (
     <>
-      <div
-        className="border p-4  rounded dark:bg-slate-800 w-1/"
-        onChange={() =>
-          onCategoryChange({
-            name,
-          })
-        }
-      >
+      <div className="border p-4  rounded dark:bg-slate-800 w-1/">
         <h2 className="font-semibold mb-2 dark:text-white">
           Manage Categories
         </h2>
@@ -23,7 +26,7 @@ const CategoryManager = ({ onCategoryChange }) => {
           type="text"
           className="border px-2 py-1 rounded mb-3 w-full dark:bg-slate-700 dark:text-white"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={handleInputChange}
           placeholder="Category name"
         />
         {/* // color picker  */}

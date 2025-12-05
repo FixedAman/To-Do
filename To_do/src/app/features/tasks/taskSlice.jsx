@@ -44,7 +44,7 @@ export const addTaskInFirebase = createAsyncThunk(
         categoryId,
         createdAt: new Date().toISOString(),
       });
-      return { id: taskRef.id, text: taskText, completed: false };
+      return { id: taskRef.id, text: taskText, completed: false  , categoryId};
     } catch (error) {
       return rejectWithValue(error.message);
     }

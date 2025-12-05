@@ -24,7 +24,8 @@ const Home = () => {
   const [editingTask, setEditingTask] = useState(null);
   const dispatch = useDispatch();
   const [showPopup, setShowPopup] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  console.log("This is from category homne ", selectedCategory);
   useEffect(() => {
     if (user?.uid) {
       dispatch(fetchUserTasksFromFirebase({ userId: user.uid }));
@@ -35,7 +36,6 @@ const Home = () => {
     loading: allTaskLoader,
     error,
   } = useSelector((state) => state?.listOfTask);
-  const { categories } = useSelector((state) => state.listOfCategory);
 
   useEffect(() => {
     setFilteredTask(allTasks);
@@ -57,6 +57,8 @@ const Home = () => {
             category: selectedCategory,
           })
         ).unwrap();
+        console.log("what is going on in category : ", selectedCategory);
+        console.log("addCategory Result !", newCategory);
         mainCategoryId = newCategory.id;
       }
 
@@ -175,7 +177,6 @@ const Home = () => {
               onComplete={handleToggleComplete}
               loading={allTaskLoader}
               handleDelete={handleDelete}
-              categoryAdd={categories}
             />
           </ul>
         )}

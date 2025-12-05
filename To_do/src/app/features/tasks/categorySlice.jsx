@@ -70,6 +70,7 @@ export const addCategory = createAsyncThunk(
     }
   }
 );
+
 const categorySlice = createSlice({
   name: "category",
   initialState: {
