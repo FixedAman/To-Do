@@ -24,7 +24,7 @@ const Home = () => {
   const [editingTask, setEditingTask] = useState(null);
   const dispatch = useDispatch();
   const [showPopup, setShowPopup] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState(null);
   console.log("This is from category homne ", selectedCategory);
   useEffect(() => {
     if (user?.uid) {
@@ -49,8 +49,11 @@ const Home = () => {
       let mainCategoryId;
       //* snapshot for category
       const categoryValue = selectedCategory;
+      if (categoryValue?.name) {
+        console.log("before adding in firebase", categoryValue.name);
+      }
       //* category adding
-      if (categoryValue) {
+      if (categoryValue?.name) {
         const newCategory = await dispatch(
           addCategory({
             userId: user.uid,

@@ -36,8 +36,9 @@ export const addCategory = createAsyncThunk(
   async ({ userId, category }, { rejectWithValue }) => {
     try {
       if (!userId) return rejectWithValue("userId is misssing!");
-      if (!category?.name)
-        return rejectWithValue("whole category name in data is missing!");
+      if (!category?.name) {
+        console.log("adding firebase : ", name);
+      }
       const name = category.name.trim();
       const normalized = category.name.toLowerCase().replace(/\s+/g, "");
       const q = query(collection(db, "users", userId, "categories"));
@@ -94,7 +95,17 @@ const categorySlice = createSlice({
       })
       .addCase(addCategory.fulfilled, (state, action) => {
         state.loading = false;
-        state.categories.push(action.payload);
+        const cat = action.payload;
+        if (!cat || !cat.id) return;
+        const idx = state.categories.findIndex((c) => c.id === cat.id);
+        if (idx === -1) {
+          state.categories.push(action.payload);
+        } else {
+          state.categories[idx] = {
+            ...state.categories[idx],
+            ...cat,
+          };
+        }
       })
       .addCase(addCategory.pending, (state) => {
         state.loading = true;

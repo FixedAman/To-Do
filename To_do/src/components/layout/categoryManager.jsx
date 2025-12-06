@@ -2,7 +2,7 @@ import { useState } from "react";
 
 const CategoryManager = ({
   onCategoryChange,
-  disabled = true,
+  disabled = false,
   sendOnBlur = true,
 }) => {
   const [name, setName] = useState("");
@@ -12,9 +12,12 @@ const CategoryManager = ({
   const handleInputChange = (e) => {
     const v = e.target.value ?? "";
     setName(v);
-    if (typeof onCategoryChange === "function") {
-      onCategoryChange(newval);
-    }
+  
+  };
+  const handleBlur = () => {
+    onCategoryChange?.({ name: name.trim() });
+
+    console.log(onCategoryChange);
   };
   return (
     <>
@@ -28,6 +31,8 @@ const CategoryManager = ({
           value={name}
           onChange={handleInputChange}
           placeholder="Category name"
+          onBlur={handleBlur}
+          disabled={disabled}
         />
         {/* // color picker  */}
         {/* <div className="mb-3 ">
