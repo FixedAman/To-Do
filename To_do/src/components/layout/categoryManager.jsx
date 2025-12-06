@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const CategoryManager = ({
   onCategoryChange,
   disabled = false,
-  sendOnBlur = true,
+  resetCategoryInput,
 }) => {
   const [name, setName] = useState("");
   const [emoji, setEmoji] = useState(""); // optional user no need to add this if  they dont want
@@ -12,13 +12,14 @@ const CategoryManager = ({
   const handleInputChange = (e) => {
     const v = e.target.value ?? "";
     setName(v);
-  
   };
   const handleBlur = () => {
     onCategoryChange?.({ name: name.trim() });
-
-    console.log(onCategoryChange);
   };
+  //** detecting if addCategorySuccessfull automaticaly name will be removed */
+  useEffect(() => {
+    setName("");
+  }, [resetCategoryInput]);
   return (
     <>
       <div className="border p-4  rounded dark:bg-slate-800 w-1/">

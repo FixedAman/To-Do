@@ -24,8 +24,10 @@ const Home = () => {
   const [editingTask, setEditingTask] = useState(null);
   const dispatch = useDispatch();
   const [showPopup, setShowPopup] = useState(false);
+  //**for categoryManager  */
   const [selectedCategory, setSelectedCategory] = useState(null);
-  console.log("This is from category homne ", selectedCategory);
+  // ** for child container categoryManager
+  const [resetCategoryInput, setResetCategoryInput] = useState(false);
   useEffect(() => {
     if (user?.uid) {
       dispatch(fetchUserTasksFromFirebase({ userId: user.uid }));
@@ -60,9 +62,9 @@ const Home = () => {
             category: selectedCategory,
           })
         ).unwrap();
-        console.log("what is going on in category : ", selectedCategory);
-        console.log("addCategory Result !", newCategory);
+
         mainCategoryId = newCategory.id;
+        setResetCategoryInput((prev) => !prev);
       }
 
       //* updating the user
@@ -150,7 +152,10 @@ const Home = () => {
         </div>
 
         <form className="mb-6 gap-2 " onSubmit={handleSubmit}>
-          <CategoryManager onCategoryChange={setSelectedCategory} />
+          <CategoryManager
+            onCategoryChange={setSelectedCategory}
+            resetCategoryInput={resetCategoryInput}
+          />
           <input
             type="text"
             className="border  focus:outline-none px-3 py-2 rounded dark:text-white mt-2 "
